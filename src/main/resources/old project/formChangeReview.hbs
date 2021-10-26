@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Styl částečně převzat z w3schools  -->
+<link type="text/css" rel="stylesheet" href="/css/main.css">
+
+
+<head>
+    <title>Česká Herní Databáze</title>
+</head>
+
+<body>
+
+    {{> header userLoggedIn}}
+
+    <div class="w3-main">
+
+        <div class="w3-row w3-padding-64" style="margin-left:37%">
+            <div class="w3-twothird w3-container">
+
+                {{!-- formulář na úpravu recenze --}}
+                <form method="POST" action="../../cgdLists/frontend/reviewsList/{{review._id}}">
+                    <h2 style="margin-left:10%" class="w3-text-blue"></h2>
+
+                    <label>Zadejte název recenze:</label>
+                    <input type="text" name="title" placeholder="Zadejte název" class="w3-input"
+                        style="margin-bottom:5px" value="{{review.title}}">
+
+                    <label>Zadejte text recenze:</label>
+                    <textarea type="text" name="text" placeholder="Zadejte popis recenze"
+                        class="w3-input input-field-extra-width" style="margin-bottom:5px" rows="6"
+                        cols="50">{{review.text}}</textarea>
+
+                    <label>Zadejte skóre recenze:*</label>
+                    <input type="text" name="score" placeholder="Zadejte skóre" class="w3-input"
+                        style="margin-bottom:5px" value="{{review.score}}">
+
+                    <button class="w3-button w3-text-blue w3-theme-l3 " style="margin-left:19%"> Změň
+                        recenzi</button>
+                </form>
+
+                <div style="margin-top:5px">
+                    <form method="POST" action="../../cgdLists/frontend/reviewsList/delete/{{review._id}}">
+                        <button class="w3-button w3-text-blue w3-theme-l3 " style="margin-left:19%"> Smaž
+                            recenzi</button>
+                </div>
+                </form>
+
+                <div style="margin-top:10px">
+                    <button id="back-button" class="w3-button w3-text-blue w3-theme-l3" style="margin-left:21%"><a
+                            href="/game/{{review.gameID}}">Zpátky</a></button>
+                </div>
+            </div>
+        </div>
+
+        {{>footer}}
+
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Styl částečně převzat z w3schools  -->
+<link type="text/css" rel="stylesheet" href="/css/main.css">
+
+<head>
+    <title>Česká Herní Databáze</title>
+</head>
+
+<body>
+
+    {{> header userLoggedIn}}
+
+    <div class="w3-main">
+        <div class="w3-row w3-padding-64" style="margin-left:37%">
+            <div class="w3-twothird w3-container">
+                {{!-- formulář na vytvoření hry --}}
+                <form method="POST" action="/cgdLists/gamesList">
+                    <h2 style="margin-left:10%" class="w3-text-blue"></h2>
+                    <label>Zadejte název hry:*</label>
+                    <input type="text" name="title" placeholder="Zadejte název" class="w3-input"
+                        style="margin-bottom:5px">
+                    <label>Zadejte popis hry:*</label>
+                    <textarea type="text" name="description" placeholder="Zadejte popis"
+                        class="w3-input input-field-extra-width" style="margin-bottom:5px" rows="6"
+                        cols="50"></textarea>
+                    <label>Zadejte žánr hry:</label>
+                    <input type="text" name="genre" placeholder="Zadejte žánr" class="w3-input"
+                        style="margin-bottom:5px">
+                    <label>Zadejte platformu hry:</label>
+                    <input type="text" name="platform" placeholder="Zadejte platformu" class="w3-input"
+                        style="margin-bottom:5px">
+                    <label>Zadejte vývojáře hry:</label>
+                    <input type="text" name="developer" placeholder="Zadejte vývojáře" class="w3-input"
+                        style="margin-bottom:5px">
+                    <label>Zadejte vydavatele hry:</label>
+                    <input type="text" name="publisher" placeholder="Zadejte vydavatele" class="w3-input"
+                        style="margin-bottom:5px">
+
+                    <button id="create-button" class="w3-button w3-text-blue w3-theme-l3 "
+                        style="margin-left:19%">Vytvoř
+                        hru</button>
+                </form>
+
+                <div style="margin-top:10px">
+                    <button id="back-button" class="w3-button w3-text-blue w3-theme-l3" style="margin-left:21%"><a
+                            href="/games">Zpátky</a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{>footer}}
+
+</body>
+
+</html>
