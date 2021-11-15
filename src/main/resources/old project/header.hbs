@@ -9,21 +9,26 @@
 
 <header>
 
+
+
     <nav>
         <!-- hlavička -->
         <div class="w3-top">
             <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
                 <a href="/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Domů</a>
                 <a href="/games" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Hry</a>
-                {{#if this.isUserLogged}}
-                {{else}}
                 <a href="/register" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Registrace</a>
-                {{/if}}
-                {{#if this.isUserLogged}}
-                <a href="/user" class="w3-bar-item w3-button w3-hide-small w3-hover-white w3-right">Vaše údaje</a>
-                {{else}}
                 <a href="/login" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Přihlaš se</a>
-                {{/if}}
+
+<!--                {{#if this.isUserLogged}}-->
+<!--                {{else}}-->
+<!--                <a href="/register" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Registrace</a>-->
+<!--                {{/if}}-->
+<!--                {{#if this.isUserLogged}}-->
+<!--                <a href="/user" class="w3-bar-item w3-button w3-hide-small w3-hover-white w3-right">Vaše údaje</a>-->
+<!--                {{else}}-->
+<!--                <a href="/login" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Přihlaš se</a>-->
+<!--                {{/if}}-->
 
             </div>
         </div>

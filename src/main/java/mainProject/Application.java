@@ -15,7 +15,7 @@ public class Application implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         // namapovat URL / na view jmenem index (tedy pres view-resolver na /WEB-INF/jsp/index.jsp)
-        registry.addViewController("/").setViewName("/main.html");
+        registry.addViewController("/").setViewName("/home.html");
     }
 
 }

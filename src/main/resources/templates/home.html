@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Styl částečně převzat z w3schools  -->
+<link type="text/css" rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" th:href="@{/main.css}"/>-->
+
+<head>
+    <title>Česká Herní Databáze</title>
+
+</head>
+
+<!--{{domovská stránka}}-->
+
+<body style="background-color:#00bcd4">
+
+<nav>
+    <!-- hlavička -->
+    <div class="w3-top">
+        <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+            <a href="/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Domů</a>
+            <a href="/games" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Hry</a>
+            <a href="/register" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Registrace</a>
+            <a href="/login" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Přihlaš se</a>
+        </div>
+    </div>
+</nav>
+
+<div class="imagebox">
+    <img th:src="@{/home.png}" class="center-image" alt="Home Screen center-image"/>
+</div>
+
+<!-- pata -->
+<div class="w3-container w3-theme-l2 w3-padding-16">
+    <h5>Studentský projekt - TNPW2 UHK FIM - David Urban</h5>
+</div>
+
+</body>
+
+</html>
