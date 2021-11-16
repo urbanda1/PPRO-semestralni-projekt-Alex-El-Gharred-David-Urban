@@ -1,7 +1,24 @@
 package mainProject.services;
 
 
-public class MainMethods implements MainInterface {
+import mainProject.entities.ItemForSale;
+import mainProject.repository.ItemForSaleRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ItemForSaleMethods implements ItemForSaleRepository {
+    private List<ItemForSale> itemsForSale = new ArrayList<>();
+
+    @Override
+    public void odstran(ItemForSale i) {
+        itemsForSale.remove(i);
+    }
+
+    @Override
+    public void save(ItemForSale i) {
+        itemsForSale.add(i);
+    }
 }
 
 //    private List<MainMethods> inzeraty = new ArrayList<MainMethods>();

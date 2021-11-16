@@ -1,8 +1,10 @@
-package mainProject.databaze;
+package mainProject.entities;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+@Entity
 public class MovieGame {
 
     @Id
@@ -24,6 +26,9 @@ public class MovieGame {
         this.developerCompany = developerCompany;
         this.publisherCompany = publisherCompany;
         this.text = text;
+    }
+
+    public MovieGame() {
     }
 
     public int getIdMovie() {

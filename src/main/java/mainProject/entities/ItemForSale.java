@@ -1,12 +1,12 @@
-package mainProject.databaze;
+package mainProject.entities;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
 public class ItemForSale {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int idItemForSale;
     private double price;
     private String itemName;
@@ -16,6 +16,9 @@ public class ItemForSale {
         this.price = price;
         this.itemName = itemName;
         this.note = note;
+    }
+
+    public ItemForSale() {
     }
 
     public int getIdItemForSale() {

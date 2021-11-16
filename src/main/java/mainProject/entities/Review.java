@@ -1,8 +1,10 @@
-package mainProject.databaze;
+package mainProject.entities;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+@Entity
 public class Review {
 
     @Id
@@ -18,6 +20,9 @@ public class Review {
         this.text = text;
         this.score = score;
         this.date = date;
+    }
+
+    public Review() {
     }
 
     public int getIdReview() {

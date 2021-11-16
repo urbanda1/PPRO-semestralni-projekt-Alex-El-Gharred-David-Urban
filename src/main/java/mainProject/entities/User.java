@@ -1,8 +1,10 @@
-package mainProject.databaze;
+package mainProject.entities;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+@Entity
 public class User {
 
     @Id
@@ -24,6 +26,9 @@ public class User {
         this.street = street;
         this.zipCode = zipCode;
         this.fullName = fullName;
+    }
+
+    public User() {
     }
 
     public int getIdUser() {
