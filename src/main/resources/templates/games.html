@@ -1,51 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Styl částečně převzat z w3schools  -->
-<link type="text/css" rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" th:href="@{/main.css}"/>-->
 
 <head>
     <title>Česká Herní Databáze</title>
 </head>
 
 <body>
-    {{> header userLoggedIn}}
+
+<nav>
+    <!-- hlavička -->
+    <div class="w3-top">
+        <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+            <a href="/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Domů</a>
+            <a href="/games" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Hry</a>
+            <a href="/register" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Registrace</a>
+            <a href="/login" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Přihlaš se</a>
+        </div>
+    </div>
+</nav>
 
     <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu"
         id="myOverlay"></div>
 
     <div class="w3-main">
 
-        {{!-- seznam všech her v databázi --}}
-        {{# each games }}
-        <div class="w3-row w3-padding-32" style="margin-left:50px">
-            <div class="w3-twothird w3-container" style="margin-bottom:-60px">
-                <h1 class="w3-text-blue"> <a href="./game/{{this._id}}"> {{ this.title }} </a></h1>
-                <p id="description">{{this.description}}</p>
+<!--        {{!&#45;&#45; seznam všech her v databázi &#45;&#45;}}-->
+<!--        {{# each games }}-->
+<!--        <div class="w3-row w3-padding-32" style="margin-left:50px">-->
+<!--            <div class="w3-twothird w3-container" style="margin-bottom:-60px">-->
+<!--                <h1 class="w3-text-blue"> <a href="./game/{{this._id}}"> {{ this.title }} </a></h1>-->
+<!--                <p id="description">{{this.description}}</p>-->
 
-                {{!-- dopracování if podmínky, když není uživatel přihlášený - nemělo by se mu tohle zobrazovat --}}
-                {{#if ../userLoggedIn.isUserLogged}}
-                <button class="w3-button w3-text-blue w3-theme-l3"><a href="/forms/formChangeGame/{{this._id}}"> Uprav
-                        hru</a></button>
-                {{/if}}
+<!--                {{!&#45;&#45; dopracování if podmínky, když není uživatel přihlášený - nemělo by se mu tohle zobrazovat &#45;&#45;}}-->
+<!--                {{#if ../userLoggedIn.isUserLogged}}-->
+<!--                <button class="w3-button w3-text-blue w3-theme-l3"><a href="/forms/formChangeGame/{{this._id}}"> Uprav-->
+<!--                        hru</a></button>-->
+<!--                {{/if}}-->
 
-            </div>
+<!--            </div>-->
+<!--        </div>-->
+<!--        {{/each}}-->
+
+<!--        {{!&#45;&#45; dopracování if podmínky, když není uživatel přihlášený - nemělo by se mu tohle zobrazovat &#45;&#45;}}-->
+<!--        <div class="w3-row w3-padding-64" style="margin-left:37%">-->
+<!--            <div class="w3-twothird w3-container" style="margin-top:-30px">-->
+<!--                {{#if userLoggedIn.isUserLogged}}-->
+<!--                <button id="login-button" class="w3-button w3-text-blue w3-theme-l3">-->
+<!--                    <a href="/forms/formCreateGame">Vytvoř-->
+<!--                        novou hru </a></button>-->
+<!--                {{/if}}-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <div class="w3-container w3-theme-l2 w3-padding-16">
+            <h5>Studentský projekt - TNPW2 UHK FIM - Alex El Gharred, David Urban</h5>
         </div>
-        {{/each}}
-
-        {{!-- dopracování if podmínky, když není uživatel přihlášený - nemělo by se mu tohle zobrazovat --}}
-        <div class="w3-row w3-padding-64" style="margin-left:37%">
-            <div class="w3-twothird w3-container" style="margin-top:-30px">
-                {{#if userLoggedIn.isUserLogged}}
-                <button id="login-button" class="w3-button w3-text-blue w3-theme-l3">
-                    <a href="/forms/formCreateGame">Vytvoř
-                        novou hru </a></button>
-                {{/if}}
-            </div>
-        </div>
-
-        {{>footer}}
 
     </div>
 </body>

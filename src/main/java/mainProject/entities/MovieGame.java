@@ -3,6 +3,9 @@ package mainProject.entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class MovieGame {
@@ -17,6 +20,14 @@ public class MovieGame {
     private String developerCompany;
     private String publisherCompany;
     private String text;
+
+    //nastavení cizích klíčů
+    @OneToMany(mappedBy = "movieGame")
+    private List<Review> reviews = new ArrayList();
+
+    @OneToMany(mappedBy = "movieGame")
+    private List<ItemForSale> itemsForSale = new ArrayList();
+
 
     public MovieGame(int score, String genre, String platform, String title, String developerCompany, String publisherCompany, String text) {
         this.score = score;
@@ -94,5 +105,7 @@ public class MovieGame {
     public void setText(String text) {
         this.text = text;
     }
+
+
 
 }

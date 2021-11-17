@@ -1,5 +1,5 @@
 package mainProject.web;
-import org.springframework.boot.Banner;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -7,11 +7,29 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class MainController {
 
+    //základní controllers jenom pro zobrazení html stránek
+    @RequestMapping("/games")
+    public ModelAndView showGames() {
+        ModelAndView model = new ModelAndView("games.html");
+        return model;
+    }
+
+    //základní controllers jenom pro zobrazení html stránek
+    @RequestMapping("/login")
+    public ModelAndView showLogin() {
+        ModelAndView model = new ModelAndView("login.html");
+        return model;
+    }
+
+    //základní controllers jenom pro zobrazení html stránek
+    @RequestMapping("/register")
+    public ModelAndView showRegister() {
+        ModelAndView model = new ModelAndView("register.html");
+        return model;
+    }
 
 }
 
-//    private PametoveUlozisteInzeratu inzeraty = new PametoveUlozisteInzeratu();
-//    private String kategorie;
 //
 //    @RequestMapping("/")
 //    public ModelAndView zobrazitMain() {

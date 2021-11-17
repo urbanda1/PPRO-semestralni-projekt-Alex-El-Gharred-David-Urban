@@ -1,88 +1,88 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>-->
 
-<html>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Styl částečně převzat z w3schools  -->
-<link type="text/css" rel="stylesheet" href="/css/main.css">
+<!--<html xmlns:th="http://www.w3.org/1999/xhtml">-->
+<!--<meta charset="UTF-8">-->
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--&lt;!&ndash; Styl částečně převzat z w3schools  &ndash;&gt;-->
+<!--<link rel="stylesheet" th:href="@{/main.css}"/>&ndash;&gt;-->
 
-<head>
-    <title>Česká Herní Databáze</title>
-</head>
+<!--<head>-->
+<!--    <title>Česká Herní Databáze</title>-->
+<!--</head>-->
 
-<body>
-    {{> header userLoggedIn}}
+<!--<body>-->
+<!--    {{> header userLoggedIn}}-->
 
-    <div class="w3-main">
-        <div class="w3-row w3-padding-64" style="margin-left:37%">
-            <div class="w3-twothird w3-container">
-                <h2 style="margin-left:17%" class="w3-text-blue">Vaše údaje </h2>
+<!--    <div class="w3-main">-->
+<!--        <div class="w3-row w3-padding-64" style="margin-left:37%">-->
+<!--            <div class="w3-twothird w3-container">-->
+<!--                <h2 style="margin-left:17%" class="w3-text-blue">Vaše údaje </h2>-->
 
-                <form method="POST" action="/cgdLists/frontend/usersList/{{user._id}}">
+<!--                <form method="POST" action="/cgdLists/frontend/usersList/{{user._id}}">-->
 
-                    <!-- Jsem by se měly zobrazit údaje o uživateli a uživatel by měl mít schopnost je změnit   -->
-                    <label for="user-name">Jméno</label>
-                    <input id="user-name" type="text" name="username" class="w3-input" style="margin-bottom:5px"
-                        value="{{user.username}}">
-                    <label for="user-email">Email</label>
-                    <input id="user-email" type="text" name="email" class="w3-input" style="margin-bottom:5px"
-                        value="{{user.email}}">
-                    <label for="user-password">Heslo (jestli heslo nechcete měnit, nechte pole prázdné)</label>
+<!--                    &lt;!&ndash; Jsem by se měly zobrazit údaje o uživateli a uživatel by měl mít schopnost je změnit   &ndash;&gt;-->
+<!--                    <label for="user-name">Jméno</label>-->
+<!--                    <input id="user-name" type="text" name="username" class="w3-input" style="margin-bottom:5px"-->
+<!--                        value="{{user.username}}">-->
+<!--                    <label for="user-email">Email</label>-->
+<!--                    <input id="user-email" type="text" name="email" class="w3-input" style="margin-bottom:5px"-->
+<!--                        value="{{user.email}}">-->
+<!--                    <label for="user-password">Heslo (jestli heslo nechcete měnit, nechte pole prázdné)</label>-->
 
-                    <div class="">
-                        <input id="user-password" type="password" name="password" class="w3-input"
-                            style="margin-bottom:5px" value="">
-                        <input id="showPassword" type="checkbox">Ukaž heslo</input>
-                    </div>
+<!--                    <div class="">-->
+<!--                        <input id="user-password" type="password" name="password" class="w3-input"-->
+<!--                            style="margin-bottom:5px" value="">-->
+<!--                        <input id="showPassword" type="checkbox">Ukaž heslo</input>-->
+<!--                    </div>-->
 
-                    <!-- Tlačítko pro změnu údajů   -->
-                    <button id="user-button-change" class="w3-button w3-text-blue w3-theme-l3"
-                        style="margin-left:19%">Uprav
-                        údaje</button>
-            </div>
-        </div>
-        </form>
+<!--                    &lt;!&ndash; Tlačítko pro změnu údajů   &ndash;&gt;-->
+<!--                    <button id="user-button-change" class="w3-button w3-text-blue w3-theme-l3"-->
+<!--                        style="margin-left:19%">Uprav-->
+<!--                        údaje</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        </form>-->
 
-        <form method="POST" action="/auth/logout">
-            <div style="margin-left:45%">
-                <div class="w3-twothird w3-container">
-                    <!-- Tlačítko pro odhlášení   -->
-                    <button id="logout-button" class="w3-button w3-text-blue w3-theme-l3"
-                        style="margin-top:-100px">Odhlásit se</button>
-                </div>
-            </div>
-        </form>
+<!--        <form method="POST" action="/auth/logout">-->
+<!--            <div style="margin-left:45%">-->
+<!--                <div class="w3-twothird w3-container">-->
+<!--                    &lt;!&ndash; Tlačítko pro odhlášení   &ndash;&gt;-->
+<!--                    <button id="logout-button" class="w3-button w3-text-blue w3-theme-l3"-->
+<!--                        style="margin-top:-100px">Odhlásit se</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </form>-->
 
-        {{#if displayReviewsUser}}
-        <div class="w3-row" style="margin-left:50px">
-            <div class="w3-twothird w3-container">
-                <h1 class="w3-text-blue" style="margin-left:40%">Vaše recenze</h1>
-            </div>
-        </div>
-        {{/if}}
+<!--        {{#if displayReviewsUser}}-->
+<!--        <div class="w3-row" style="margin-left:50px">-->
+<!--            <div class="w3-twothird w3-container">-->
+<!--                <h1 class="w3-text-blue" style="margin-left:40%">Vaše recenze</h1>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        {{/if}}-->
 
-        <!-- seznam recenzí uživatele  -->
-        {{# each userReviews }}
-        <div class="w3-row w3-padding-16" style="margin-left:50px">
-            <div class="w3-twothird w3-container" style="margin-top:-45px">
-                <!-- zbytek se musí propojit z kolekce recenzí podle uživatelského ID  -->
-                <h3 class="w3-text-black" style="margin-top:50px"><a href="game/{{this.gameID}}">{{this.gameTitle}}</a>
-                    - vaše skóre: {{this.score}}</h3>
-                <h2 class="w3-text-cyan">{{this.title}} </h2>
-                <p>{{this.text}}</p>
+<!--        &lt;!&ndash; seznam recenzí uživatele  &ndash;&gt;-->
+<!--        {{# each userReviews }}-->
+<!--        <div class="w3-row w3-padding-16" style="margin-left:50px">-->
+<!--            <div class="w3-twothird w3-container" style="margin-top:-45px">-->
+<!--                &lt;!&ndash; zbytek se musí propojit z kolekce recenzí podle uživatelského ID  &ndash;&gt;-->
+<!--                <h3 class="w3-text-black" style="margin-top:50px"><a href="game/{{this.gameID}}">{{this.gameTitle}}</a>-->
+<!--                    - vaše skóre: {{this.score}}</h3>-->
+<!--                <h2 class="w3-text-cyan">{{this.title}} </h2>-->
+<!--                <p>{{this.text}}</p>-->
 
-                <div class="">
-                    <b class="display-one-line w3-right" style="margin-top:-20px">Datum vytvoření: {{this.date}}</b>
-                    <button class="w3-button w3-text-blue w3-theme-l3"><a href="/forms/formChangeReview/{{this._id}}">
-                            Uprav recenzi</a></button>
-                </div>
-            </div>
-        </div>
-        {{/each}}
-        {{>footer}}
+<!--                <div class="">-->
+<!--                    <b class="display-one-line w3-right" style="margin-top:-20px">Datum vytvoření: {{this.date}}</b>-->
+<!--                    <button class="w3-button w3-text-blue w3-theme-l3"><a href="/forms/formChangeReview/{{this._id}}">-->
+<!--                            Uprav recenzi</a></button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        {{/each}}-->
+<!--        {{>footer}}-->
 
-        {{!-- v "/js/functions.js je uložena funkce pro schování hesla" --}}
-        <script src="/js/functions.js"></script>
-</body>
+<!--        {{!&#45;&#45; v "/js/functions.js je uložena funkce pro schování hesla" &#45;&#45;}}-->
+<!--        <script src="/js/functions.js"></script>-->
+<!--</body>-->
 
-</html>
+<!--</html>-->

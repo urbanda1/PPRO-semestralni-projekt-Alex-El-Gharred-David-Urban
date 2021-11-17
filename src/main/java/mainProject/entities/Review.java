@@ -1,8 +1,6 @@
 package mainProject.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Review {
@@ -14,6 +12,14 @@ public class Review {
     private String text;
     private int score;
     private String date;
+
+    //nastavení cizích klíčů
+    @ManyToOne
+    private MovieGame movieGame;
+
+    //nastavení cizích klíčů
+    @ManyToOne
+    private User user;
 
     public Review(String title, String text, int score, String date) {
         this.title = title;

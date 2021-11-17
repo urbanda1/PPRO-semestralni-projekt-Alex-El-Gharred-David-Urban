@@ -1,6 +1,8 @@
 package mainProject.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class ItemForSale {
@@ -17,6 +19,13 @@ public class ItemForSale {
         this.itemName = itemName;
         this.note = note;
     }
+
+    //nastavení cizích klíčů
+    @ManyToOne
+    private MovieGame movieGame;
+
+    @ManyToOne
+    private User user;
 
     public ItemForSale() {
     }
@@ -53,5 +62,6 @@ public class ItemForSale {
         this.note = note;
     }
 
+    //nastavení cizích klíčů
 
 }

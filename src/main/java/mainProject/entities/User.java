@@ -3,6 +3,9 @@ package mainProject.entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User {
@@ -17,6 +20,13 @@ public class User {
     private String street;
     private int zipCode;
     private String fullName;
+
+    //nastavení cizích klíčů
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviews = new ArrayList();
+
+    @OneToMany(mappedBy = "user")
+    private List<ItemForSale> itemsForSale = new ArrayList();
 
     public User(String username, String email, String password, String city, String street, int zipCode, String fullName) {
         this.username = username;
