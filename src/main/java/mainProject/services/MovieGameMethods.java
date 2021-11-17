@@ -1,4 +1,6 @@
 package mainProject.services;
 
-public class MovieGameMethods {
+import mainProject.repository.MovieGameRepository;
+
+public class MovieGameMethods implements MovieGameRepository {
 }

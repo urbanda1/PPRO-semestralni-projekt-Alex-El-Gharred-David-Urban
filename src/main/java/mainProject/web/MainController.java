@@ -7,21 +7,19 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class MainController {
 
-    //základní controllers jenom pro zobrazení html stránek
+    //základní controllers jenom zatím pro zobrazení html stránek
     @RequestMapping("/games")
     public ModelAndView showGames() {
         ModelAndView model = new ModelAndView("games.html");
         return model;
     }
 
-    //základní controllers jenom pro zobrazení html stránek
     @RequestMapping("/login")
     public ModelAndView showLogin() {
         ModelAndView model = new ModelAndView("login.html");
         return model;
     }
 
-    //základní controllers jenom pro zobrazení html stránek
     @RequestMapping("/register")
     public ModelAndView showRegister() {
         ModelAndView model = new ModelAndView("register.html");

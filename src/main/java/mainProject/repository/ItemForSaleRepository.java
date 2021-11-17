@@ -5,14 +5,12 @@ package mainProject.repository;
 // CRUD refers Create, Read, Update, Delete
 
 import mainProject.entities.ItemForSale;
-import org.springframework.data.repository.CrudRepository;
 
-public interface ItemForSaleRepository<ItemForSale, Integer> {
+public interface ItemForSaleRepository<Itemforsale, Integer> {
 
-    void odstran(mainProject.entities.ItemForSale i);
+    void odstran(ItemForSale i);
 
-    void save(mainProject.entities.ItemForSale i);
-
+    void save(ItemForSale i);
 }
 //    public List<MainMethods> getInzeraty();
 //

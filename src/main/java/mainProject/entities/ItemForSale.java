@@ -1,31 +1,37 @@
 package mainProject.entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
+@Table(name ="itemforsale")
 public class ItemForSale {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "iditemforsale")
     private int idItemForSale;
+    @Column(name = "price")
     private double price;
+    @Column(name = "itemname")
     private String itemName;
+    @Column(name = "note")
     private String note;
+
+    //nastavení cizích klíčů
+    @ManyToOne
+    @JoinColumn(name = "moviegame")
+    private MovieGame movieGame;
+
+    @ManyToOne
+    @JoinColumn(name = "user")
+    private User user;
+
 
     public ItemForSale(double price, String itemName, String note) {
         this.price = price;
         this.itemName = itemName;
         this.note = note;
     }
-
-    //nastavení cizích klíčů
-    @ManyToOne
-    private MovieGame movieGame;
-
-    @ManyToOne
-    private User user;
 
     public ItemForSale() {
     }
@@ -61,7 +67,4 @@ public class ItemForSale {
     public void setNote(String note) {
         this.note = note;
     }
-
-    //nastavení cizích klíčů
-
 }

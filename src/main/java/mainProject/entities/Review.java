@@ -3,22 +3,30 @@ package mainProject.entities;
 import javax.persistence.*;
 
 @Entity
+@Table(name ="Review")
 public class Review {
 
     @Id
     @GeneratedValue
+    @Column(name = "idreview")
     private int idReview;
+    @Column(name = "title")
     private String title;
+    @Column(name = "text")
     private String text;
+    @Column(name = "score")
     private int score;
+    @Column(name = "date")
     private String date;
 
     //nastavení cizích klíčů
     @ManyToOne
+    @JoinColumn(name = "moviegame")
     private MovieGame movieGame;
 
     //nastavení cizích klíčů
     @ManyToOne
+    @JoinColumn(name = "user")
     private User user;
 
     public Review(String title, String text, int score, String date) {

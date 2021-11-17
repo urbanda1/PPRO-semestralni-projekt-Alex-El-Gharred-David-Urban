@@ -1,4 +1,6 @@
 package mainProject.services;
 
-public class ReviewMethods {
+import mainProject.repository.ReviewRepository;
+
+public class ReviewMethods implements ReviewRepository {
 }

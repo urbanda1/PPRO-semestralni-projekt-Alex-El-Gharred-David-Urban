@@ -1,4 +1,6 @@
 package mainProject.services;
 
-public class UserMethods {
+import mainProject.repository.UserRepository;
+
+public class UserMethods implements UserRepository {
 }

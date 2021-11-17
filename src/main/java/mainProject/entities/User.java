@@ -1,24 +1,30 @@
 package mainProject.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name ="user")
 public class User {
 
     @Id
     @GeneratedValue
+    @Column(name = "iduser")
     private int idUser;
+    @Column(name = "username")
     private String username;
+    @Column(name = "email")
     private String email;
+    @Column(name = "password")
     private String password;
+    @Column(name = "city")
     private String city;
+    @Column(name = "street")
     private String street;
+    @Column(name = "zipcode")
     private int zipCode;
+    @Column(name = "fullname")
     private String fullName;
 
     //nastavení cizích klíčů

@@ -1,24 +1,30 @@
 package mainProject.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name ="moviegame")
 public class MovieGame {
 
     @Id
     @GeneratedValue
+    @Column(name = "idmovie")
     private int idMovie;
+    @Column(name = "score")
     private int score;
+    @Column(name = "genre")
     private String genre;
+    @Column(name = "platform")
     private String platform;
+    @Column(name = "title")
     private String title;
+    @Column(name = "developercompany")
     private String developerCompany;
+    @Column(name = "publishercompany")
     private String publisherCompany;
+    @Column(name = "text")
     private String text;
 
     //nastavení cizích klíčů
