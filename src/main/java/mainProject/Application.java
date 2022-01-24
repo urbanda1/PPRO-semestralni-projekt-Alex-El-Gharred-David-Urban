@@ -1,40 +1,54 @@
 package mainProject;
 
-import mainProject.entities.ItemForSale;
-import mainProject.entities.MovieGame;
+import mainProject.entities.Game;
+import mainProject.entities.Review;
+import mainProject.services.ServicesMain;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.util.List;
+
 
 @SpringBootApplication
 public class Application implements WebMvcConfigurer {
 
     public static void main(String[] args) {
-        // nějaké prvotní naplnění databáze - zkoušení práce s databází
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ppro-aegdu");
-        EntityManager em = emf.createEntityManager();
+        //naplnění počátečními daty
+        ServicesMain sm = new ServicesMain();
 
-        em.getTransaction().begin();
+        //vložení nějakých dat do databáze, když žádné nejsou
+        try {
+            List<Game> games;
+            games = ServicesMain.em.createQuery("select e from Game e ",
+                    Game.class).getResultList();
+            System.out.println(games.get(0).getTitle());
+        } catch (Exception e) {
+            e.printStackTrace();
+            sm.createInitialGameData();
+        }
 
-        MovieGame movieGame = new MovieGame(100,"test1","test2","test3","test4","test5","test5");
-        em.persist(movieGame);
-
-        em.getTransaction().commit();
-        em.close();
-        emf.close();
+        try {
+            List<Review> reviews;
+            reviews = ServicesMain.em.createQuery("select e from Review e ",
+                    Review.class).getResultList();
+            System.out.println(reviews.get(0).getTitle());
+        } catch (Exception e) {
+            e.printStackTrace();
+            sm.createInitialReviewData();
+        }
 
         SpringApplication.run(Application.class, args);
     }
+
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         // namapovat URL / na view jmenem index (tedy pres view-resolver na /WEB-INF/jsp/index.jsp)
         registry.addViewController("/").setViewName("/home.html");
+
+
     }
 
 }

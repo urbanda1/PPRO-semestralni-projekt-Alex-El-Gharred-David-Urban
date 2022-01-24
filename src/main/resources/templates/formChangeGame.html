@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Styl částečně převzat z w3schools  -->
+<link rel="stylesheet" th:href="@{/main.css}"/>
+
+<head>
+    <title>Česká Herní Databáze</title>
+</head>
+
+<body>
+
+<nav>
+    <!-- hlavička -->
+    <div class="w3-top">
+        <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+            <a href="/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Domů</a>
+            <a href="/games" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Hry</a>
+            <a href="/register" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Registrace</a>
+            <a href="/login" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Přihlaš se</a>
+        </div>
+    </div>
+</nav>
+
+<
+<nav>
+    <!-- hlavička -->
+    <div class="w3-top">
+        <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+            <a href="/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Domů</a>
+            <a href="/games" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Hry</a>
+            <a href="/register" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Registrace</a>
+            <a href="/login" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Přihlaš se</a>
+        </div>
+    </div>
+</nav>
+
+<div class="w3-main">
+    <div class="w3-row w3-padding-64" style="margin-left:37%">
+        <div class="w3-twothird w3-container">
+
+            <!--   na modifikace stávající hry -->
+            <form action="#" th:action="@{/editGame}" th:object="${game}"
+                  method="post">
+                <h2 style="margin-left:10%" class="w3-text-blue"></h2>
+
+                <input type="hidden" th:field="*{idGame}"/>
+
+                <label>Zadejte název hry:*</label>
+                <input type="text" name="title" placeholder="Zadejte název" class="w3-input"
+                       style="margin-bottom:5px" th:field="*{title}">
+
+                <label>Zadejte popis hry:*</label>
+                <textarea type="text" name="description" placeholder="Zadejte popis"
+                          class="w3-input input-field-extra-width" style="margin-bottom:5px" rows="6"
+                          cols="50" th:field="*{text}"></textarea>
+
+                <label>Zadejte definující žánr hry:</label>
+                <div style="margin-bottom:5px" th:field="*{genre}">
+                    <select name="genre">
+                        <option value="Sportovní">Sportovní</option>
+                        <option value="Strategie">Strategie</option>
+                        <option value="RPG">RPG</option>
+                        <option value="MMORPG">MMORPG</option>
+                        <option value="Střílečky">Střílečky</option>
+                    </select>
+                </div>
+
+                <label>Zadejte primární platformu hry:</label>
+                <div style="margin-bottom:5px" th:field="*{platform}">
+                    <select name="platform">
+                        <option value="PC">PC</option>
+                        <option value="XBOX">XBOX</option>
+                        <option value="Playstation">Playstation</option>
+                    </select>
+                </div>
+
+                <label>Zadejte vývojáře hry:</label>
+                <input type="text" name="developer" placeholder="Zadejte vývojáře" class="w3-input"
+                       style="margin-bottom:5px" th:field="*{developerCompany}">
+
+                <label>Zadejte vydavatele hry:</label>
+                <input type="text" name="publisher" placeholder="Zadejte vydavatele" class="w3-input"
+                       style="margin-bottom:5px" th:field="*{publisherCompany}">
+
+                <button id="create-button" class="w3-button w3-text-blue w3-theme-l3 "
+                        style="margin-left:19%">Uprav
+                    hru
+                </button>
+            </form>
+
+            <div style="margin-top:10px">
+                <button id="back-button" class="w3-button w3-text-blue w3-theme-l3" style="margin-left:21%"><a
+                        href="/games">Zpátky</a></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="w3-container w3-theme-l2 w3-padding-16" style="margin-top:20px">
+    <h5>Studentský projekt - TNPW2 UHK FIM - Alex El Gharred, David Urban</h5>
+</div>
+
+</body>
+
+</html>

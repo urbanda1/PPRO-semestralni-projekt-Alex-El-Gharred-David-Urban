@@ -1,27 +1,21 @@
 package mainProject.repository;
 
-
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
 // CRUD refers Create, Read, Update, Delete
 
 import mainProject.entities.ItemForSale;
 
+import java.util.List;
+
 public interface ItemForSaleRepository<Itemforsale, Integer> {
 
-    void odstran(ItemForSale i);
+    void delete(ItemForSale i);
 
     void save(ItemForSale i);
+
+    ItemForSale getItemById(int id);
+
+    List<ItemForSale> getAllItemsFromUser(int userId);
+
+    List<ItemForSale> getAllItemsByMovie(int movieId);
 }
-//    public List<MainMethods> getInzeraty();
-//
-//    public void pridej(MainMethods i);
-//
-//    public void odstran(MainMethods i);
-//
-//    public void odstran(int id);
-//
-//    public void uprav(MainMethods i);
-//
-//    public MainMethods getById(int id);
-//
-//    public List<MainMethods> getInzeratyByKategorie(String kategorie);

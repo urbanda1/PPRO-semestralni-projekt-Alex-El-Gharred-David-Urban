@@ -1,108 +1,131 @@
 package mainProject.web;
 
+import mainProject.entities.Game;
+import mainProject.entities.User;
+import mainProject.services.GameMethods;
+import mainProject.services.ItemForSaleMethods;
+import mainProject.services.ReviewMethods;
+import mainProject.services.UserMethods;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class MainController {
+    GameMethods mgm = new GameMethods();
+    ItemForSaleMethods im = new ItemForSaleMethods();
+    ReviewMethods rm = new ReviewMethods();
+    UserMethods um = new UserMethods();
 
-    //základní controllers jenom zatím pro zobrazení html stránek
+    ///////////////////// hlavní formuláře ////////////////////////////////
     @RequestMapping("/games")
     public ModelAndView showGames() {
-        ModelAndView model = new ModelAndView("games.html");
+        ModelAndView model = new ModelAndView("games");
+        model.addObject("games", mgm.getGames());
+
         return model;
     }
 
     @RequestMapping("/login")
     public ModelAndView showLogin() {
-        ModelAndView model = new ModelAndView("login.html");
+        ModelAndView model = new ModelAndView("login");
         return model;
     }
 
+    //registrace
     @RequestMapping("/register")
     public ModelAndView showRegister() {
-        ModelAndView model = new ModelAndView("register.html");
+        User u = new User();
+        ModelAndView model = new ModelAndView("register");
+        model.addObject("user", u);
         return model;
+    }
+
+    ///////////////////// hry ////////////////////////////////
+    @RequestMapping("/formCreateGame")
+    public ModelAndView showCreateGame() {
+        Game mg = new Game();
+        ModelAndView model = new ModelAndView("formCreateGame");
+        model.addObject("game", mg);
+
+        return model;
+    }
+
+    @RequestMapping("/deleteGame")
+    public String deleteGame(@RequestParam("idgame") int idGame) {
+
+        Game game = mgm.getGameById(idGame);
+        mgm.delete(game);
+
+        return "redirect:/games";
+    }
+
+    @PostMapping("/saveGame")
+    public String createGame(@ModelAttribute("game") Game g) {
+
+        mgm.save(g);
+
+        return "redirect:/games";
+    }
+
+    @RequestMapping(value = "/formChangeGame/{idgame}", method = { RequestMethod.POST, RequestMethod.PUT})
+    public ModelAndView showFormChangeGame(@RequestParam("idgame") int idGame) {
+
+        Game mg = mgm.getGameById(idGame);
+        ModelAndView model = new ModelAndView("formChangeGame");
+        model.addObject("game", mg);
+
+        return model;
+    }
+
+//    @RequestMapping(value = "/game/{idgame}", method = { RequestMethod.POST, RequestMethod.PUT})
+//    public ModelAndView showGame(@RequestParam("idgame") int idGame) {
+//
+//        Game mg = mgm.getGameById(idGame);
+//        ModelAndView model = new ModelAndView("game");
+//        model.addObject("game", mg);
+//
+//        return model;
+//    }
+
+    @RequestMapping(value = "/game/{idgame}", method = { RequestMethod.GET, RequestMethod.PUT})
+    public ModelAndView showGame(@PathVariable("idgame") int idGame) {
+        Game mg = mgm.getGameById(idGame);
+        ModelAndView model = new ModelAndView("game");
+        model.addObject("game", mg);
+        model.addObject("reviews", rm.getReviews());
+        return model;
+    }
+
+    @PostMapping("/editGame")
+    public String editGame(@ModelAttribute("game") Game g) {
+
+        mgm.update(g);
+
+        return "redirect:/games";
+    }
+
+
+    ///////////////////// recenze ////////////////////////////////
+    @RequestMapping("/formCreateReview")
+    public ModelAndView showCreateReview() {
+        ModelAndView model = new ModelAndView("formCreateReview");
+        return model;
+    }
+
+    @RequestMapping("/formChangeReview")
+    public ModelAndView showFormChangeReview() {
+        ModelAndView model = new ModelAndView("formChangeReview");
+        return model;
+    }
+
+    ///////////////////// recenze ////////////////////////////////
+    @PostMapping("/saveUser")
+    public String createGame(@ModelAttribute("user") User u) {
+
+        um.save(u);
+
+        return "redirect:/";
     }
 
 }
-
-//
-//    @RequestMapping("/")
-//    public ModelAndView zobrazitMain() {
-//        if (kategorie == null) {
-//            kategorie = "";
-//        }
-//
-//        ModelAndView model = new ModelAndView("main");
-//
-//        List<Inzerat> vysledky;
-//
-//        vysledky = inzeraty.getInzeratyByKategorie(kategorie);
-//
-//        if ((kategorie.equals("Nákup")) || (kategorie.equals("Prodej")) || (kategorie.equals("Výměna"))) {
-//            model.addObject("inzeraty", vysledky);
-//        } else {
-//            model.addObject("inzeraty", inzeraty.getInzeraty());
-//        }
-//        return model;
-//    }
-//
-//    @RequestMapping("/create-form")
-//    public ModelAndView zobrazitCreate() {
-//        Inzerat i = new Inzerat();
-//        ModelAndView model = new ModelAndView("create");
-//        model.addObject("inzerat", i);
-//
-//        return model;
-//    }
-//
-//    @RequestMapping("/edit-form")
-//    public ModelAndView zobrazitEdit(@RequestParam("id") int id) {
-//        ModelAndView model = new ModelAndView("edit");
-//        Inzerat inzeratEdit = inzeraty.getById(id);
-//
-//        model.addObject("inzeratEdit", inzeratEdit);
-//
-//        return model;
-//    }
-//
-//    @PostMapping("/editInzerat")
-//    public String editInzerat(@ModelAttribute("inzeratEdit") Inzerat i) {
-//
-//        inzeraty.getById(i.getId()).setText(i.getText());
-//        inzeraty.getById(i.getId()).setKategorie(i.getKategorie());
-//        inzeraty.getById(i.getId()).setCena(i.getCena());
-//
-//        return "redirect:/";
-//    }
-//
-//    @PostMapping("/saveInzerat")
-//    public String create(@ModelAttribute("inzerat") Inzerat i) {
-//
-//        inzeraty.pridej(i);
-//
-//        return "redirect:/";
-//    }
-//
-//    @PostMapping("/filterInzeratyByKategorie")
-//    public String zobrazFiltr(@RequestParam("kategorie") String k) {
-//        kategorie = k;
-//
-//        return "redirect:/";
-//    }
-//
-//    @RequestMapping("/deleteInzerat")
-//    public String deleteInzerat(@RequestParam("heslo") String heslo) {
-//
-//        for (Inzerat inzerat : inzeraty.getInzeraty()) {
-//            if (inzerat.getHesloProUpravu().equals(heslo)) {
-//                inzeraty.odstran(inzerat);
-//                return "redirect:/";
-//            }
-//        }
-//        return "redirect:/";
-//    }
-
-

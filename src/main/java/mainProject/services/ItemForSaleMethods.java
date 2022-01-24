@@ -4,85 +4,67 @@ package mainProject.services;
 import mainProject.entities.ItemForSale;
 import mainProject.repository.ItemForSaleRepository;
 
+import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemForSaleMethods implements ItemForSaleRepository {
+public class ItemForSaleMethods extends ServicesMain implements ItemForSaleRepository {
     private List<ItemForSale> itemsForSale = new ArrayList<>();
 
+    public ItemForSaleMethods() {
+        retriveListFromDatabase();
+    }
+
+    //init seznamu
+    private void retriveListFromDatabase() {
+        itemsForSale = em.createQuery("select e from ItemForSale e ",
+                ItemForSale.class).getResultList();
+    }
+
+    private void deleteItemFromDatabase(int pkItem) {
+        em.getTransaction().begin();
+        //klasický sql skript query
+        Query query = em.createQuery("delete from ItemForSale e where e.idItemForSale=:iditemforsale");
+        query = query.setParameter("iditemforsale", pkItem);
+        query.executeUpdate();
+        em.getTransaction().commit();
+    }
+
     @Override
-    public void odstran(ItemForSale i) {
+    public void delete(ItemForSale i) {
+        //vymazání z dabáze
+        deleteItemFromDatabase(i.getIdItemForSale());
+
         itemsForSale.remove(i);
     }
 
     @Override
     public void save(ItemForSale i) {
         itemsForSale.add(i);
+        saveEntity(i);
     }
-}
 
-//    private List<MainMethods> inzeraty = new ArrayList<MainMethods>();
-//
-//    @Override
-//    public List<MainMethods> getInzeraty() {
-//        return Collections.unmodifiableList(inzeraty);
-//    }
-//
-//    @Override
-//    public void pridej(MainMethods i) {
-//        inzeraty.add(i);
-//        int maxId = 0;
-//        // vygenerovat nove id (bezne dela databaze)
-//        for (MainMethods inz : inzeraty) {
-//            if (inz.getId() > maxId) maxId = inz.getId();
-//        }
-//        i.setId(maxId + 1);
-//        Collections.sort(inzeraty, new Comparator<MainMethods>() {
-//
-//            public int compare(MainMethods o1, MainMethods o2) {
-//                return o1.getDatum().compareTo(o2.getDatum());
-//            }
-//
-//        });
-//    }
-//
-//    @Override
-//    public void odstran(MainMethods i) {
-//        inzeraty.remove(i);
-//    }
-//
-//    @Override
-//    public void odstran(int id) {
-//        inzeraty.remove(getById(id));
-//    }
-//
-//    @Override
-//    public void uprav(MainMethods i) {
-//        for (int j = 0; j < inzeraty.size(); j++) {
-//            if (i.getId() == inzeraty.get(j).getId()) {
-//                inzeraty.set(j, i);
-//                return;
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public MainMethods getById(int id) {
-//        for (MainMethods i : inzeraty) {
-//            if (i.getId() == id) {
-//                return i;
-//            }
-//        }
+    @Override
+    public ItemForSale getItemById(int id) {
+        for (ItemForSale i : itemsForSale) {
+            if (i.getIdItemForSale() == id) {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<ItemForSale> getAllItemsFromUser(int userId) {
+//        for (ItemForSale i : itemsForSale) {
+//            if (i.getIdItemForSale() == id) {
 //        return null;
 //    }
-//
-//    @Override
-//    public List<MainMethods> getInzeratyByKategorie(String kategorie) {
-//        List<MainMethods> vysledky = new ArrayList<MainMethods>();
-//        for (MainMethods i : inzeraty) {
-//            if (kategorie.equals(i.getKategorie())) {
-//                vysledky.add(i);
-//            }
-//        }
-//        return vysledky;
-//    }
+        return null;
+    }
+
+    @Override
+    public List<ItemForSale> getAllItemsByMovie(int movieId) {
+        return null;
+    }
+}

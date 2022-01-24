@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Styl částečně převzat z w3schools -->
-<link rel="stylesheet" th:href="@{/main.css}"/>-->
+<!-- Styl částečně převzat z w3schools  -->
+<link rel="stylesheet" th:href="@{/main.css}"/>
 
 <head>
     <title>Česká Herní Databáze</title>
@@ -24,7 +23,8 @@
 </nav>
 
 <!--{{!&#45;&#45; registrační formulář &#45;&#45;}}-->
-<form method="POST" action="/cgdLists/usersList">
+<form action="#" th:action="@{/saveUser}" th:object="${user}"
+      method="post">
     <div class="w3-main">
         <div class="w3-row w3-padding-64" style="margin-left:37%">
             <div class="w3-twothird w3-container">
@@ -33,18 +33,30 @@
                 <label for="user-name">Vaše jméno/přezdívka, pod kterým ostatní uživatelé budou vidět Vaše
                     komentáře.*</label>
                 <input id="user-name" type="text" name="username" placeholder="Zadejte jméno" class="w3-input"
-                       style="margin-bottom:5px">
+                       style="margin-bottom:5px" th:field="*{username}">
+
                 <label for="email">Email slouží primárně pro přihlašování.*</label>
                 <input id="email" type="text" name="email" placeholder="Zadejte email" class="w3-input"
-                       style="margin-bottom:5px">
+                       style="margin-bottom:5px" th:field="*{email}">
+
                 <label>Heslo musí obsahovat alespoň 8 znaků a nesmí v sobě obsahovat slovo
                     "heslo".*</label>
+                <input id="user-password" type="password" name="password" placeholder="Zadejte heslo"
+                       class="w3-input" style="margin-bottom:5px" th:field="*{password}">
 
-                <div class="">
-                    <input id="user-password" type="password" name="password" placeholder="Zadejte heslo"
-                           class="w3-input" style="margin-bottom:5px">
-                    <input id="showPassword" type="checkbox">Ukaž heslo</input>
-                </div>
+                <label>Zadejte svoje jméno. (volitelné) </label>
+                <input type="text" name="password" placeholder="Celé jméno"
+                       class="w3-input" style="margin-bottom:5px" th:field="*{fullName}">
+
+                <label>Zadejte svoji adresu. (volitelné)</label>
+                <input type="text" name="city" placeholder="Zadejte město"
+                       class="w3-input" style="margin-bottom:5px" th:field="*{city}">
+
+                <input type="text" name="street" placeholder="Zadejte ulici"
+                       class="w3-input" style="margin-bottom:5px" th:field="*{street}">
+
+                <input type="text" name="zipCode" placeholder="Zadejte PSČ"
+                       class="w3-input" style="margin-bottom:5px" th:field="*{zipCode}">
 
                 <button id="register-button" class="w3-button w3-text-blue w3-theme-l3"
                         style="margin-left:19%">Registrace
@@ -56,7 +68,7 @@
 
 
 <!-- pata -->
-<div class="w3-container w3-theme-l2 w3-padding-16">
+<div class="w3-container w3-theme-l2 w3-padding-16" style="margin-top:20px">
     <h5>Studentský projekt - TNPW2 UHK FIM - Alex El Gharred, David Urban</h5>
 </div>
 

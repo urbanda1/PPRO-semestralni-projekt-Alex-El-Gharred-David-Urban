@@ -3,7 +3,7 @@ package mainProject.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name ="Review")
+@Table(name = "review")
 public class Review {
 
     @Id
@@ -16,17 +16,18 @@ public class Review {
     private String text;
     @Column(name = "score")
     private int score;
+
     @Column(name = "date")
     private String date;
 
     //nastavení cizích klíčů
     @ManyToOne
-    @JoinColumn(name = "moviegame")
-    private MovieGame movieGame;
+    @JoinColumn(name = "idgame")
+    private Game game;
 
     //nastavení cizích klíčů
     @ManyToOne
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "iduser")
     private User user;
 
     public Review(String title, String text, int score, String date) {
@@ -34,6 +35,8 @@ public class Review {
         this.text = text;
         this.score = score;
         this.date = date;
+//        this.game = g;
+//        this.user = u;
     }
 
     public Review() {
@@ -77,5 +80,21 @@ public class Review {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Styl částečně převzat z w3schools  -->
-<link rel="stylesheet" th:href="@{/main.css}"/>-->
+<link rel="stylesheet" th:href="@{/main.css}"/>
+-->
 
 <head>
     <title>Česká Herní Databáze</title>
@@ -23,44 +24,61 @@
     </div>
 </nav>
 
-    <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu"
-        id="myOverlay"></div>
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu"
+     id="myOverlay"></div>
 
-    <div class="w3-main">
+<div class="w3-main">
 
-<!--        {{!&#45;&#45; seznam všech her v databázi &#45;&#45;}}-->
-<!--        {{# each games }}-->
-<!--        <div class="w3-row w3-padding-32" style="margin-left:50px">-->
-<!--            <div class="w3-twothird w3-container" style="margin-bottom:-60px">-->
-<!--                <h1 class="w3-text-blue"> <a href="./game/{{this._id}}"> {{ this.title }} </a></h1>-->
-<!--                <p id="description">{{this.description}}</p>-->
+    <!--{{seznam všech her v databázi}}-->
+    <div th:each="game: ${games}">
+        <div class="w3-row w3-padding-32" style="margin-left:50px">
+            <div class="w3-twothird w3-container" style="margin-bottom:-60px">
 
-<!--                {{!&#45;&#45; dopracování if podmínky, když není uživatel přihlášený - nemělo by se mu tohle zobrazovat &#45;&#45;}}-->
-<!--                {{#if ../userLoggedIn.isUserLogged}}-->
-<!--                <button class="w3-button w3-text-blue w3-theme-l3"><a href="/forms/formChangeGame/{{this._id}}"> Uprav-->
-<!--                        hru</a></button>-->
-<!--                {{/if}}-->
+                <!--                <form action="#" th:action="@{/game/{idgame}(idgame=${game.getIdGame()})}" method="get">-->
+<!--                <input type="hidden"/>-->
 
-<!--            </div>-->
-<!--        </div>-->
-<!--        {{/each}}-->
+                <a th:href="@{/game/{idgame}(idgame=${game.getIdGame()})}"><h1
+                        class="w3-text-blue" th:text="${game.getTitle()}">
+                </h1></a>
+
+                <p id="description" th:text="${game.getText()}"></p>
+                <!--                </form>-->
+            </div>
+
+            <div>
+                <form action="#" th:action="@{/deleteGame}" method="post">
+                    <input type="hidden" th:name="idgame" th:value="${game.getIdGame()}"/>
+                    <button style="margin-left:-750px" class="w3-button w3-text-blue w3-theme-l3"> Smaž
+                        hru
+                    </button>
+                </form>
+                <form action="#" th:action="@{/formChangeGame/{idgame}(idgame=${game.getIdGame()})}" method="post">
+                    <input type="hidden" th:name="idgame" th:value="${game.getIdGame()}"/>
+                    <button style="margin-left:-750px" class="w3-button w3-text-blue w3-theme-l3"> Uprav
+                        hru
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--        {{!&#45;&#45; dopracování if podmínky, když není uživatel přihlášený - nemělo by se mu tohle zobrazovat &#45;&#45;}}-->
-<!--        <div class="w3-row w3-padding-64" style="margin-left:37%">-->
-<!--            <div class="w3-twothird w3-container" style="margin-top:-30px">-->
-<!--                {{#if userLoggedIn.isUserLogged}}-->
-<!--                <button id="login-button" class="w3-button w3-text-blue w3-theme-l3">-->
-<!--                    <a href="/forms/formCreateGame">Vytvoř-->
-<!--                        novou hru </a></button>-->
-<!--                {{/if}}-->
-<!--            </div>-->
-<!--        </div>-->
-
-        <div class="w3-container w3-theme-l2 w3-padding-16">
-            <h5>Studentský projekt - TNPW2 UHK FIM - Alex El Gharred, David Urban</h5>
-        </div>
-
+<div class="w3-row w3-padding-64" style="margin-left:10%">
+    <div class="w3-twothird w3-container" style="margin-top:-30px">
+        <!--                {{#if userLoggedIn.isUserLogged}}-->
+        <button id="login-button" class="w3-button w3-text-blue w3-theme-l3">
+            <a href="/formCreateGame">Vytvoř
+                novou hru </a></button>
+        <!--                {{/if}}-->
     </div>
+</div>
+
+<div class="w3-container w3-theme-l2 w3-padding-16" style="margin-top:20px">
+    <h5>Studentský projekt - TNPW2 UHK FIM - Alex El Gharred, David Urban</h5>
+</div>
+
+</div>
 </body>
 
 </html>

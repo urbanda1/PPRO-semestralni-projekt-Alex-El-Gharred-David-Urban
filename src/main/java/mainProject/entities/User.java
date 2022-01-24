@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name ="user")
+@Table(name = "user")
 public class User {
 
     @Id
@@ -45,6 +45,22 @@ public class User {
     }
 
     public User() {
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<ItemForSale> getItemsForSale() {
+        return itemsForSale;
+    }
+
+    public void setItemsForSale(List<ItemForSale> itemsForSale) {
+        this.itemsForSale = itemsForSale;
     }
 
     public int getIdUser() {
