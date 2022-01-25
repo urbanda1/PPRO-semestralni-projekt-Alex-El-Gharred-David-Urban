@@ -28,47 +28,35 @@
      id="myOverlay"></div>
 
 <div class="w3-main">
-
-    <!--{{seznam všech her v databázi}}-->
-    <div th:each="game: ${games}">
+    <div th:each="item: ${itemsForSale}">
         <div class="w3-row w3-padding-32" style="margin-left:50px">
             <div class="w3-twothird w3-container" style="margin-bottom:-60px">
-
-                <a th:href="@{/game/{idgame}(idgame=${game.getIdGame()})}"><h1
-                        class="w3-text-blue" th:text="${game.getTitle()}">
-                </h1></a>
-                <p id="description" th:text="${game.getText()}"></p>
-            </div>
-
-            <div>
-                <form action="#" th:action="@{/deleteGame}" method="post">
-                    <input type="hidden" th:name="idgame" th:value="${game.getIdGame()}"/>
-                    <button style="margin-left:-750px" class="w3-button w3-text-blue w3-theme-l3"> Smaž
-                        hru
-                    </button>
-                </form>
-                <form action="#" th:action="@{/formChangeGame/{idgame}(idgame=${game.getIdGame()})}" method="post">
-                    <input type="hidden" th:name="idgame" th:value="${game.getIdGame()}"/>
-                    <button style="margin-left:-750px" class="w3-button w3-text-blue w3-theme-l3"> Uprav
-                        hru
-                    </button>
-                </form>
+                <h1 class="w3-text-orange" th:text="${item.getItemName()}"></h1>
+                <h2 class="w3-text-red" th:text="'Cena '+${item.getPrice()}+' €'"></h2>
+                <p id="description" th:text="${item.getNote()}"></p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="w3-row w3-padding-64" style="margin-left:10%">
+<div th:object="${game}" class="w3-row w3-padding-64" style="margin-left:10%">
     <div class="w3-twothird w3-container" style="margin-top:-30px">
         <!--                {{#if userLoggedIn.isUserLogged}}-->
-        <button id="login-button" class="w3-button w3-text-blue w3-theme-l3">
-            <a href="/formCreateGame">Vytvoř
-                novou hru </a></button>
-        <!--                {{/if}}-->
+        <button class="w3-button w3-text-blue w3-theme-l3">
+            <a th:href="@{/formCreateItem/{idgame}(idgame=${game.getIdGame()})}">Přidat položku k
+                prodeji</a></button>
+    </div>
+
+    <div style="margin-left:-350px">
+        <div style="margin-top:10px" >
+            <button id="back-button" class="w3-button w3-text-blue w3-theme-l3" style="margin-left:21%"><a
+                    th:href="@{/game/{idgame}(idgame=${game.getIdGame()})}">Zpátky</a></button>
+        </div>
     </div>
 </div>
 
-<div class="w3-container w3-theme-l2 w3-padding-16" style="margin-top:20px">
+
+<div class=" w3-container w3-theme-l2 w3-padding-16" style="margin-top:20px">
     <h5>Studentský projekt - TNPW2 UHK FIM - Alex El Gharred, David Urban</h5>
 </div>
 

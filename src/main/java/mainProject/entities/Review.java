@@ -30,12 +30,12 @@ public class Review {
     @JoinColumn(name = "iduser")
     private User user;
 
-    public Review(String title, String text, int score, String date) {
+    public Review(String title, String text, int score, String date, Game g) {
         this.title = title;
         this.text = text;
         this.score = score;
         this.date = date;
-//        this.game = g;
+        this.game = g;
 //        this.user = u;
     }
 

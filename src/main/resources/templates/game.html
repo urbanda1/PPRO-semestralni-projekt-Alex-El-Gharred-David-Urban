@@ -53,42 +53,39 @@
         </div>
     </div>
 
+    <div th:each="review: ${reviews}">
+        <div class="w3-row w3-padding-16" style="margin-left:50px">
+            <div class="w3-twothird w3-container" style="margin-top:-20px">
+                <!-- zbytek se musí propojit z kolekce recenzí podle uživatelského ID  -->
+                <h2 class="w3-text-cyan" th:text="${review.getTitle()}+ ' Skóre: '+${review.getScore()}"></h2>
+                <p th:text="${review.getText()}"></p>
 
-            <div class="w3-row w3-padding-16" style="margin-left:50px">
-                <div class="w3-twothird w3-container" style="margin-top:-20px">
-                    <!-- zbytek se musí propojit z kolekce recenzí podle uživatelského ID  -->
-                    <h2 class="w3-text-cyan">{{this.title}} - Skóre: {{this.score}}</h2>
-                    <p>{{this.text}}</p>
-
-                    <div class="">
-                        <b class="display-one-line w3-left" style="margin-top:-17px">Vytvořil uživatel:
-                            {{this.username}}</b>
-                        <b class="display-one-line w3-right" style="margin-top:-17px">Datum vytvoření: {{this.date}}</b>
-                    </div>
-                </div>
-
-                <div class="w3-left" style="margin-left:-10%">
-<!--                    {{#if ../userLoggedIn.isUserLogged}}-->
-<!--                    {{#if this.isCurrentUserAuthor}}-->
-                    <button class="w3-button w3-text-blue w3-theme-l3">
-                        <a href="/forms/formChangeReview/{{this._id}}">
-                            Uprav recenzi</a></button>
-<!--                    {{/if}}-->
-<!--                    {{/if}}-->
-                </div>
-
+                <!--                    <b class="display-one-line w3-left" style="margin-top:-17px">Vytvořil uživatel:-->
+                <!--                        {{this.username}}</b>-->
+                <b class="display-one-line w3-right" style="margin-top:-17px"
+                   th:text="'Datum vytvoření: '+${review.getDate()}"></b>
             </div>
-            {{/each}}
+        </div>
+    </div>
 
-            <div class="w3-row w3-padding-16" style="margin-left:37%">
-                <div class="w3-twothird w3-container">
-<!--                    {{#if userLoggedIn.isUserLogged}}-->
-                    <button class="w3-button w3-text-blue w3-theme-l3" style="margin-left:-20%">
-                        <a href="/forms/formCreateReview/{{game._id}}">Vytvoř
-                            novou recenzi </a></button>
-<!--                    {{/if}}-->
-                </div>
+    <div class="w3-row w3-padding-16" style="margin-left:37%">
+        <div class="w3-twothird w3-container">
+            <!--                    {{#if userLoggedIn.isUserLogged}}-->
+            <button class="w3-button w3-text-blue w3-theme-l3" style="margin-left:-20%">
+                <a th:href="@{/formCreateReview/{idgame}(idgame=${game.getIdGame()})}">Vytvoř
+                    novou recenzi </a></button>
+            <!--                    {{/if}}-->
+        </div>
+    </div>
+
+    <div style="margin-top:-15px">
+        <div class="w3-row w3-padding-16" style="margin-left:36%">
+            <div class="w3-twothird w3-container">
+                <button class="w3-button w3-text-blue w3-theme-l3" style="margin-left:-17%">
+                    <a th:href="@{/items/{idgame}(idgame=${game.getIdGame()})}">Zobraz bazar ke hře</a></button>
             </div>
+        </div>
+    </div>
 </div>
 
 <div class="w3-container w3-theme-l2 w3-padding-16" style="margin-top:20px">

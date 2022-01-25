@@ -26,11 +26,11 @@ public class ItemForSale {
     private User user;
 
 
-    public ItemForSale(double price, String itemName, String note) {
+    public ItemForSale(double price, String itemName, String note, Game g) {
         this.price = price;
         this.itemName = itemName;
         this.note = note;
-//        this.game = g;
+        this.game = g;
 //        this.user = u;
     }
 

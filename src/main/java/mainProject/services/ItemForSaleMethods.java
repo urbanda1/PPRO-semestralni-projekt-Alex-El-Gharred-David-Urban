@@ -21,7 +21,7 @@ public class ItemForSaleMethods extends ServicesMain implements ItemForSaleRepos
                 ItemForSale.class).getResultList();
     }
 
-    private void deleteItemFromDatabase(int pkItem) {
+    public void deleteItemFromDatabase(int pkItem) {
         em.getTransaction().begin();
         //klasický sql skript query
         Query query = em.createQuery("delete from ItemForSale e where e.idItemForSale=:iditemforsale");

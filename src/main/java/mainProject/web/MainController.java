@@ -1,6 +1,8 @@
 package mainProject.web;
 
 import mainProject.entities.Game;
+import mainProject.entities.ItemForSale;
+import mainProject.entities.Review;
 import mainProject.entities.User;
 import mainProject.services.GameMethods;
 import mainProject.services.ItemForSaleMethods;
@@ -12,10 +14,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class MainController {
-    GameMethods mgm = new GameMethods();
-    ItemForSaleMethods im = new ItemForSaleMethods();
-    ReviewMethods rm = new ReviewMethods();
-    UserMethods um = new UserMethods();
+    private GameMethods mgm = new GameMethods();
+    private ItemForSaleMethods im = new ItemForSaleMethods();
+    private ReviewMethods rm = new ReviewMethods();
+    private UserMethods um = new UserMethods();
+
+    //cizí klíč při vytvoření nové recenze
+    int gameID = -1;
 
     ///////////////////// hlavní formuláře ////////////////////////////////
     @RequestMapping("/games")
@@ -68,7 +73,7 @@ public class MainController {
         return "redirect:/games";
     }
 
-    @RequestMapping(value = "/formChangeGame/{idgame}", method = { RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(value = "/formChangeGame/{idgame}", method = {RequestMethod.POST, RequestMethod.PUT})
     public ModelAndView showFormChangeGame(@RequestParam("idgame") int idGame) {
 
         Game mg = mgm.getGameById(idGame);
@@ -78,22 +83,24 @@ public class MainController {
         return model;
     }
 
-//    @RequestMapping(value = "/game/{idgame}", method = { RequestMethod.POST, RequestMethod.PUT})
-//    public ModelAndView showGame(@RequestParam("idgame") int idGame) {
-//
-//        Game mg = mgm.getGameById(idGame);
-//        ModelAndView model = new ModelAndView("game");
-//        model.addObject("game", mg);
-//
-//        return model;
-//    }
-
-    @RequestMapping(value = "/game/{idgame}", method = { RequestMethod.GET, RequestMethod.PUT})
+    @RequestMapping(value = "/game/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
     public ModelAndView showGame(@PathVariable("idgame") int idGame) {
+
         Game mg = mgm.getGameById(idGame);
         ModelAndView model = new ModelAndView("game");
+
+        //  vypoctiSkore();
+        double score = 0;
+        for (Review r : mg.getReviews()) {
+            score = score + r.getScore();
+        }
+        score = score / mg.getReviews().size();
+
+        mg.setScore((int) score);
+
         model.addObject("game", mg);
-        model.addObject("reviews", rm.getReviews());
+        model.addObject("reviews", mg.getReviews());
+
         return model;
     }
 
@@ -107,10 +114,29 @@ public class MainController {
 
 
     ///////////////////// recenze ////////////////////////////////
-    @RequestMapping("/formCreateReview")
-    public ModelAndView showCreateReview() {
+    @RequestMapping(value = "/formCreateReview/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
+    public ModelAndView showCreateReview(@PathVariable("idgame") int idGame) {
+        Review r = new Review();
+
+        //poslání této hodnoty do formuláře pro vytvoření nové recenze
+        gameID = idGame;
+
         ModelAndView model = new ModelAndView("formCreateReview");
+        model.addObject("review", r);
+
         return model;
+    }
+
+    @PostMapping("/saveReview")
+    public String saveReview(@ModelAttribute("review") Review r) {
+
+        if (gameID > 0) {
+            r.setGame(mgm.getGameById(gameID));
+            mgm.getGameById(gameID).getReviews().add(r);
+            rm.save(r);
+        }
+
+        return "redirect:/games";
     }
 
     @RequestMapping("/formChangeReview")
@@ -119,7 +145,7 @@ public class MainController {
         return model;
     }
 
-    ///////////////////// recenze ////////////////////////////////
+    ///////////////////// uživatel ////////////////////////////////
     @PostMapping("/saveUser")
     public String createGame(@ModelAttribute("user") User u) {
 
@@ -128,4 +154,42 @@ public class MainController {
         return "redirect:/";
     }
 
+    ///////////////////// položky k prodání ////////////////////////////////
+    @RequestMapping(value = "/items/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
+    public ModelAndView showItemsToSell(@PathVariable("idgame") int idGame) {
+
+        Game mg = mgm.getGameById(idGame);
+        ModelAndView model = new ModelAndView("items");
+        model.addObject("itemsForSale", mg.getItemsForSale());
+        model.addObject("game", mg);
+
+        return model;
+    }
+
+    @RequestMapping(value = "/formCreateItem/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
+    public ModelAndView showCreateItemForm(@PathVariable("idgame") int idGame) {
+        ItemForSale i = new ItemForSale();
+
+        //poslání této hodnoty do formuláře pro vytvoření nové recenze
+        gameID = idGame;
+
+        ModelAndView model = new ModelAndView("formCreateItem");
+        model.addObject("itemForSale", i);
+
+        return model;
+    }
+
+    @PostMapping("/saveItem")
+    public String saveReview(@ModelAttribute("itemForSale") ItemForSale i) {
+
+        if (gameID > 0) {
+            i.setItemName(mgm.getGameById(gameID).getTitle());
+            //provázání na obou stranách vztahů a uložení do databáze
+            i.setGame(mgm.getGameById(gameID));
+            mgm.getGameById(gameID).getItemsForSale().add(i);
+            im.save(i);
+        }
+
+        return "redirect:/games";
+    }
 }

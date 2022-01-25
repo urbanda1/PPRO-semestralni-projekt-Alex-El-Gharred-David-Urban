@@ -16,7 +16,7 @@ public class GameMethods extends ServicesMain implements GameRepository {
     }
 
     //init seznamu
-    private void retriveListFromDatabase() {
+    public void retriveListFromDatabase() {
         games = em.createQuery("select e from Game e ",
                 Game.class).getResultList();
     }

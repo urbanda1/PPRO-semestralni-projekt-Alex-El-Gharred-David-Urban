@@ -14,7 +14,7 @@ public class UserMethods extends ServicesMain implements UserRepository {
     }
 
     //init seznamu
-    private void retriveListFromDatabase() {
+    public void retriveListFromDatabase() {
         users = em.createQuery("select e from User e ",
                 User.class).getResultList();
     }

@@ -16,7 +16,7 @@ public class ReviewMethods extends ServicesMain implements ReviewRepository {
     }
 
     //init seznamu
-    private void retriveListFromDatabase() {
+    public void retriveListFromDatabase() {
         reviews = em.createQuery("select e from Review e ",
                 Review.class).getResultList();
     }
