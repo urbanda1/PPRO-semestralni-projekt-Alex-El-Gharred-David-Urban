@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Styl částečně převzat z w3schools  -->
@@ -48,11 +48,11 @@
                 <input type="hidden" th:field="*{idGame}"/>
 
                 <label>Zadejte název hry:*</label>
-                <input type="text" name="title" placeholder="Zadejte název" class="w3-input"
+                <input label="" type="text" name="title" placeholder="Zadejte název" class="w3-input"
                        style="margin-bottom:5px" th:field="*{title}">
 
                 <label>Zadejte popis hry:*</label>
-                <textarea type="text" name="description" placeholder="Zadejte popis"
+                <textarea label="" type="text" name="description" placeholder="Zadejte popis"
                           class="w3-input input-field-extra-width" style="margin-bottom:5px" rows="6"
                           cols="50" th:field="*{text}"></textarea>
 
@@ -77,7 +77,7 @@
                 </div>
 
                 <label>Zadejte vývojáře hry:</label>
-                <input type="text" name="developer" placeholder="Zadejte vývojáře" class="w3-input"
+                <input label="" type="text" name="developer" placeholder="Zadejte vývojáře" class="w3-input"
                        style="margin-bottom:5px" th:field="*{developerCompany}">
 
                 <label>Zadejte vydavatele hry:</label>

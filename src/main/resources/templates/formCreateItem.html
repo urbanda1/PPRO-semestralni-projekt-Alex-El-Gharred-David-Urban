@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Styl částečně převzat z w3schools  -->
@@ -32,12 +32,12 @@
                   method="post">
                 <h2 style="margin-left:10%" class="w3-text-blue"></h2>
 
-                <label>Zadejte popis.</label>
+                <label>Zadejte popis.*</label>
                 <textarea type="text" name="description" placeholder="Zadejte popis"
                           class="w3-input input-field-extra-width" style="margin-bottom:5px" rows="6"
                           cols="50" th:field="*{note}"></textarea>
 
-                <label>Zadejte cenu požadovanou cenu.</label>
+                <label>Zadejte cenu požadovanou cenu.*</label>
                 <input type="text" name="title" placeholder="Zadejte název" class="w3-input"
                        style="margin-bottom:5px" th:field="*{price}">
 

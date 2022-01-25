@@ -1,9 +1,11 @@
 package mainProject.services;
 
+import mainProject.entities.Review;
 import mainProject.entities.User;
 import mainProject.repository.UserRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UserMethods extends ServicesMain implements UserRepository {
@@ -17,6 +19,10 @@ public class UserMethods extends ServicesMain implements UserRepository {
     public void retriveListFromDatabase() {
         users = em.createQuery("select e from User e ",
                 User.class).getResultList();
+    }
+
+    public List<User> getUsers() {
+        return Collections.unmodifiableList(users);
     }
 
     @Override

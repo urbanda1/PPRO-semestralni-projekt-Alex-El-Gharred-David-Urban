@@ -12,12 +12,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @Controller
 public class MainController {
     private GameMethods mgm = new GameMethods();
     private ItemForSaleMethods im = new ItemForSaleMethods();
     private ReviewMethods rm = new ReviewMethods();
     private UserMethods um = new UserMethods();
+
+    //chybná zpráva při vytváření/modifikace uživatele
+    private String warningMessageUser;
 
     //cizí klíč při vytvoření nové recenze
     int gameID = -1;
@@ -60,17 +65,37 @@ public class MainController {
     public String deleteGame(@RequestParam("idgame") int idGame) {
 
         Game game = mgm.getGameById(idGame);
+
+        //ted je potřeba vymazat všechny záznam recenzí a položek k prodeji, které jsou spojeny s hrou přes foreign key
+        List<ItemForSale> itemsToDelete = game.getItemsForSale();
+        List<Review> reviewsToDelete = game.getReviews();
+
+        for (Review r : reviewsToDelete) {
+            rm.delete(r);
+        }
+
+        for (ItemForSale i : itemsToDelete) {
+            im.delete(i);
+        }
+
         mgm.delete(game);
 
         return "redirect:/games";
     }
 
     @PostMapping("/saveGame")
-    public String createGame(@ModelAttribute("game") Game g) {
+    public ModelAndView createGame(@ModelAttribute("game") Game g) {
+        boolean gameValidated;
 
-        mgm.save(g);
+        //validace hry
+        gameValidated = validateGame(g);
 
-        return "redirect:/games";
+        if (gameValidated) {
+            mgm.save(g);
+            return showGames();
+        } else {
+            return showErrorMessage("Popis a název hry musí být vyplněn");
+        }
     }
 
     @RequestMapping(value = "/formChangeGame/{idgame}", method = {RequestMethod.POST, RequestMethod.PUT})
@@ -89,7 +114,7 @@ public class MainController {
         Game mg = mgm.getGameById(idGame);
         ModelAndView model = new ModelAndView("game");
 
-        //  vypoctiSkore();
+        // vypocti celkové hodnocení
         double score = 0;
         for (Review r : mg.getReviews()) {
             score = score + r.getScore();
@@ -105,13 +130,18 @@ public class MainController {
     }
 
     @PostMapping("/editGame")
-    public String editGame(@ModelAttribute("game") Game g) {
+    public ModelAndView editGame(@ModelAttribute("game") Game g) {
+        boolean gameValidated;
 
-        mgm.update(g);
+        gameValidated = validateGame(g);
 
-        return "redirect:/games";
+        if (gameValidated) {
+            mgm.update(g);
+            return showGames();
+        } else {
+            return showErrorMessage("Popis a název hry musí být vyplněn");
+        }
     }
-
 
     ///////////////////// recenze ////////////////////////////////
     @RequestMapping(value = "/formCreateReview/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
@@ -128,15 +158,23 @@ public class MainController {
     }
 
     @PostMapping("/saveReview")
-    public String saveReview(@ModelAttribute("review") Review r) {
+    public ModelAndView saveReview(@ModelAttribute("review") Review r) {
 
-        if (gameID > 0) {
-            r.setGame(mgm.getGameById(gameID));
-            mgm.getGameById(gameID).getReviews().add(r);
-            rm.save(r);
+        boolean reviewValidated;
+
+        //validace recenze
+        reviewValidated = validateReview(r);
+
+        if (reviewValidated) {
+            if (gameID > 0) {
+                r.setGame(mgm.getGameById(gameID));
+                mgm.getGameById(gameID).getReviews().add(r);
+                rm.save(r);
+            }
+            return showGame(gameID);
+        } else {
+            return showErrorMessage("Skóre a datum napsání recenze musí být vyplněno");
         }
-
-        return "redirect:/games";
     }
 
     @RequestMapping("/formChangeReview")
@@ -147,11 +185,19 @@ public class MainController {
 
     ///////////////////// uživatel ////////////////////////////////
     @PostMapping("/saveUser")
-    public String createGame(@ModelAttribute("user") User u) {
+    public ModelAndView saveUser(@ModelAttribute("user") User u) {
 
-        um.save(u);
+        boolean userValidated;
 
-        return "redirect:/";
+        userValidated = validateUser(u);
+
+        if (userValidated) {
+            //validace uživatele
+            um.save(u);
+            return showGames();
+        } else {
+            return showErrorMessage(warningMessageUser);
+        }
     }
 
     ///////////////////// položky k prodání ////////////////////////////////
@@ -180,16 +226,113 @@ public class MainController {
     }
 
     @PostMapping("/saveItem")
-    public String saveReview(@ModelAttribute("itemForSale") ItemForSale i) {
+    public ModelAndView saveReview(@ModelAttribute("itemForSale") ItemForSale i) {
+        boolean itemValidated;
 
-        if (gameID > 0) {
-            i.setItemName(mgm.getGameById(gameID).getTitle());
-            //provázání na obou stranách vztahů a uložení do databáze
-            i.setGame(mgm.getGameById(gameID));
-            mgm.getGameById(gameID).getItemsForSale().add(i);
-            im.save(i);
+        //validace položky
+        itemValidated = validateItem(i);
+
+        if (itemValidated) {
+            if (gameID > 0) {
+                i.setItemName(mgm.getGameById(gameID).getTitle());
+                //provázání na obou stranách vztahů a uložení do databáze
+                i.setGame(mgm.getGameById(gameID));
+                mgm.getGameById(gameID).getItemsForSale().add(i);
+                im.save(i);
+            }
+            return showGame(gameID);
+        } else {
+            return showErrorMessage("Cena a popis položky k prodání musí být vyplněn");
+        }
+    }
+
+    //////////////// Varovné zprávy se budou zobrazovat přes tuto stránku //////////////////////
+    @RequestMapping("/errorPage")
+    public ModelAndView showErrorMessage(String warningMessage) {
+
+        //poslání této hodnoty do formuláře pro vytvoření nové recenze
+
+        ModelAndView model = new ModelAndView("errorPage");
+        model.addObject("warningMessage", warningMessage);
+
+        return model;
+    }
+
+    //////////////// VALIDACE DAT //////////////////////
+    //validace hry
+    private boolean validateGame(Game g) {
+        //zde si pouze oveřuji, aby něco bylo vyplněno v textu a v titlu
+        if ((g.getTitle() != "") && (g.getText() != "")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //validace recenze
+    private boolean validateReview(Review r) {
+        //zde si pouze oveřuji, aby něco bylo vyplněno v textu a v titlu
+        if ((r.getDate() != "") && (r.getScore() > -1)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //validace položky
+    private boolean validateItem(ItemForSale i) {
+        //zde si pouze oveřuji, aby něco bylo vyplněno v textu a v titlu
+        if ((i.getNote() != "") && (i.getPrice() > 0)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //validace uživatele
+    private boolean validateUser(User u) {
+        boolean check = true;
+
+        //validace délky hesla
+        if (u.getPassword().length() < 8) {
+            warningMessageUser = "Heslo musí mít velikost alespoň 8 znaků";
+            check = false;
         }
 
-        return "redirect:/games";
+        //validace, aby všechna data byla vyplněna
+        if ((u.getPassword().equals("")) || (u.getUsername().equals("")) || (u.getEmail().equals(""))) {
+            warningMessageUser = "Některé povinné údaje je potřeba doplnit";
+            check = false;
+        }
+
+        //validace hesla
+        if ((u.getPassword().equals("12345678")) || (u.getPassword().equals("heslo"))) {
+            warningMessageUser = "Špatně zabezpečené heslo";
+            check = false;
+        }
+
+        //validace mailu
+        for (User user : um.getUsers()) {
+            //pokud tento mail již v databáze je, tak to vyhodí chybu
+            if (user.getEmail().equals(u.getEmail())) {
+                warningMessageUser = "Tento mail již v databázi existuje";
+                check = false;
+            }
+        }
+
+        //validace jména
+        for (User user : um.getUsers()) {
+            //pokud tento mail již v databáze je, tak to vyhodí chybu
+            if (user.getUsername().equals(u.getUsername())) {
+                warningMessageUser = "Toto uživatelské jméno má už jiný uživatel";
+                check = false;
+            }
+        }
+
+        if (check) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
