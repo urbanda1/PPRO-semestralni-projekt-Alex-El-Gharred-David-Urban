@@ -1,8 +1,6 @@
 package mainProject;
 
 import mainProject.entities.Game;
-import mainProject.entities.ItemForSale;
-import mainProject.entities.Review;
 import mainProject.services.ServicesMain;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,26 +26,6 @@ public class Application implements WebMvcConfigurer {
         } catch (Exception e) {
             e.printStackTrace();
             sm.createInitialGameData();
-        }
-
-        try {
-            List<Review> reviews;
-            reviews = ServicesMain.em.createQuery("select e from Review e ",
-                    Review.class).getResultList();
-            System.out.println(reviews.get(0).getTitle());
-        } catch (Exception e) {
-            e.printStackTrace();
-            sm.createInitialReviewData();
-        }
-
-        try {
-            List<ItemForSale> items;
-            items = ServicesMain.em.createQuery("select e from ItemForSale e ",
-                    ItemForSale.class).getResultList();
-            System.out.println(items.get(0).getItemName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            sm.createInitialItemData();
         }
 
         SpringApplication.run(Application.class, args);

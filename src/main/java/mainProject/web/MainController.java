@@ -16,10 +16,10 @@ import java.util.List;
 
 @Controller
 public class MainController {
-    private GameMethods mgm = new GameMethods();
-    private ItemForSaleMethods im = new ItemForSaleMethods();
-    private ReviewMethods rm = new ReviewMethods();
-    private UserMethods um = new UserMethods();
+    public GameMethods mgm = new GameMethods();
+    public ItemForSaleMethods im = new ItemForSaleMethods();
+    public ReviewMethods rm = new ReviewMethods();
+    public UserMethods um = new UserMethods();
 
     //chybná zpráva při vytváření/modifikace uživatele
     private String warningMessageUser;
@@ -125,6 +125,7 @@ public class MainController {
 
         model.addObject("game", mg);
         model.addObject("reviews", mg.getReviews());
+
 
         return model;
     }

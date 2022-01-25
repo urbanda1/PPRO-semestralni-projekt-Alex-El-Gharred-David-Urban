@@ -16,7 +16,7 @@ public class ItemForSaleMethods extends ServicesMain implements ItemForSaleRepos
     }
 
     //init seznamu
-    private void retriveListFromDatabase() {
+    public void retriveListFromDatabase() {
         itemsForSale = em.createQuery("select e from ItemForSale e ",
                 ItemForSale.class).getResultList();
     }
