@@ -191,7 +191,7 @@ public class MainController {
         return model;
     }
 
-    @RequestMapping("/deleteGame")
+    @PostMapping("/deleteGame")
     public String deleteGame(@RequestParam("idgame") int idGame) {
 
         Game game = mgm.getGameById(idGame);
