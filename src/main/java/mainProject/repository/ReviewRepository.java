@@ -1,8 +1,5 @@
 package mainProject.repository;
-
 import mainProject.entities.Review;
-
-import java.util.List;
 
 public interface ReviewRepository {
 
@@ -10,9 +7,7 @@ public interface ReviewRepository {
 
     void save(Review i);
 
-    Review getItemById(int id);
+    void update(Review i);
 
-    List<Review> getAllReviewsFromUser(int userId);
-
-    List<Review> getAllReviewsByMovie(int movieId);
+    Review getReviewById(int id);
 }

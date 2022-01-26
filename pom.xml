@@ -41,6 +41,18 @@
             <version>3.0.11.RELEASE</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>5.6.1</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-config</artifactId>-->
+<!--            <version>5.6.1</version>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -59,6 +71,7 @@
     </dependencies>
 
     <build>
+        <finalName>blog-api-docker</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

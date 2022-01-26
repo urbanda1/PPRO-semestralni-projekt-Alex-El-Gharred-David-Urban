@@ -9,6 +9,10 @@ Pokud ne, tak defaultní schéma v databázi MySQL je ppro-aegdu.
 Pokud nejsou v databázi žádná data, program automaticky vytvoří testovací data při prvním spuštění.
 
  Ostatní informace v konfiguračním souboru application.properties, spolu s defaultním heslem atd.
+
+-----------------------------------------------------------------------------------------------
+
+Dockerizace probíhá na principu aplikace "Docker"
  
  
 

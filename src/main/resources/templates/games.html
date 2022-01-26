@@ -12,7 +12,19 @@
 
 <body>
 
-<nav>
+<nav th:if="${userLoggedIn == true}">
+    <!-- hlavička -->
+    <div class="w3-top">
+        <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+            <a href="/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Domů</a>
+            <a href="/games" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Hry</a>
+            <a href="/user" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Vaše údaje</a>
+            <a href="/logout" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Odhlásit se</a>
+        </div>
+    </div>
+</nav>
+
+<nav th:if="${userLoggedIn == false}">
     <!-- hlavička -->
     <div class="w3-top">
         <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
@@ -41,30 +53,32 @@
             </div>
 
             <div>
-                <form action="#" th:action="@{/deleteGame}" method="post">
-                    <input type="hidden" th:name="idgame" th:value="${game.getIdGame()}"/>
-                    <button style="margin-left:-750px" class="w3-button w3-text-blue w3-theme-l3"> Smaž
-                        hru
-                    </button>
-                </form>
-                <form action="#" th:action="@{/formChangeGame/{idgame}(idgame=${game.getIdGame()})}" method="post">
-                    <input type="hidden" th:name="idgame" th:value="${game.getIdGame()}"/>
-                    <button style="margin-left:-750px" class="w3-button w3-text-blue w3-theme-l3"> Uprav
-                        hru
-                    </button>
-                </form>
+                <div th:if="${userLoggedIn == true}">
+                    <form action="#" th:action="@{/deleteGame}" method="post">
+                        <input type="hidden" th:name="idgame" th:value="${game.getIdGame()}"/>
+                        <button style="margin-left:-550px" class="w3-button w3-text-blue w3-theme-l3"> Smaž
+                            hru
+                        </button>
+                    </form>
+                </div>
+                <div th:if="${userLoggedIn == true}">
+                    <form action="#" th:action="@{/formChangeGame/{idgame}(idgame=${game.getIdGame()})}" method="post">
+                        <input type="hidden" th:name="idgame" th:value="${game.getIdGame()}"/>
+                        <button style="margin-left:-550px" class="w3-button w3-text-blue w3-theme-l3"> Uprav
+                            hru
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="w3-row w3-padding-64" style="margin-left:10%">
+<div th:if="${userLoggedIn == true}" class="w3-row w3-padding-64" style="margin-left:10%">
     <div class="w3-twothird w3-container" style="margin-top:-30px">
-        <!--                {{#if userLoggedIn.isUserLogged}}-->
         <button id="login-button" class="w3-button w3-text-blue w3-theme-l3">
             <a href="/formCreateGame">Vytvoř
                 novou hru </a></button>
-        <!--                {{/if}}-->
     </div>
 </div>
 
@@ -72,7 +86,6 @@
     <h5>Studentský projekt - TNPW2 UHK FIM - Alex El Gharred, David Urban</h5>
 </div>
 
-</div>
 </body>
 
 </html>

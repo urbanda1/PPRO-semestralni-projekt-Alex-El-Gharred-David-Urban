@@ -1,0 +1,489 @@
+package mainProject.web;
+
+import mainProject.entities.Game;
+import mainProject.entities.ItemForSale;
+import mainProject.entities.Review;
+import mainProject.entities.User;
+import mainProject.services.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.List;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Controller
+public class MainController {
+    private GameMethods mgm = new GameMethods();
+    private ItemForSaleMethods im = new ItemForSaleMethods();
+    private ReviewMethods rm = new ReviewMethods();
+    private UserMethods um = new UserMethods();
+
+    //cookies a ověření přihlášení
+    private boolean userLoggedIn = false;
+    private Cookie cookie;
+
+    //pro hašování hesla
+    BCryptPasswordEncoder bcryptEncoder = new BCryptPasswordEncoder();
+
+    //chybná zpráva při vytváření/modifikace uživatele
+    private String warningMessageUser;
+
+    //cizí klíč při vytvoření nové recenze
+    int gameID = -1;
+
+    ///////////////////// hlavní formuláře ////////////////////////////////
+    @RequestMapping("/games")
+    public ModelAndView showGames(HttpServletRequest request) {
+        //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            Arrays.stream(cookies)
+                    .map(c -> c.getName() + "=" + c.getValue())
+                    .collect(Collectors.joining(", "));
+            userLoggedIn = true;
+        } else {
+            userLoggedIn = false;
+        }
+
+        ModelAndView model = new ModelAndView("games");
+        model.addObject("games", mgm.getGames());
+
+        return model;
+    }
+
+    @RequestMapping("/")
+    public ModelAndView showHome(HttpServletRequest request) {
+
+        //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            Arrays.stream(cookies)
+                    .map(c -> c.getName() + "=" + c.getValue())
+                    .collect(Collectors.joining(", "));
+            userLoggedIn = true;
+        } else {
+            userLoggedIn = false;
+        }
+
+        ModelAndView model = new ModelAndView("home");
+        model.addObject("userLoggedIn", userLoggedIn);
+
+
+
+        return model;
+    }
+
+    //přihlášení formulář
+    @RequestMapping("/login")
+    public ModelAndView showLogin() {
+        User u = new User();
+        ModelAndView model = new ModelAndView("login");
+        model.addObject("loginData", u);
+        return model;
+    }
+
+    @RequestMapping("/loginUser")
+    public ModelAndView loginUser(@ModelAttribute("loginData") User u, HttpServletResponse response) {
+        boolean userExists = false;
+        int idUser;
+        User userFromDatabase = new User();
+
+        //zkontroluj přihl. údaje
+        //ověř nejdříve jestli uživatel existuje
+        for (User us : um.getUsers()) {
+            if (us.getEmail().equals(u.getEmail())) {
+                userExists = true;
+                userFromDatabase = us;
+            }
+        }
+
+        idUser = userFromDatabase.getIdUser();
+
+        //ověření hesla z databáze a hesla, které uživatel vloží do přihl. formuláře
+        boolean isPasswordMatched = bcryptEncoder.matches(u.getPassword(), userFromDatabase.getPassword());
+
+        // zkontroluj heslo
+        if (userExists) {
+            if (isPasswordMatched) {
+
+                //uživatel se přihlásí a uloží se mu cookies do prohlížeče
+                cookie = new Cookie("user-id", String.valueOf(idUser));
+                cookie.setMaxAge(60*60);
+                cookie.setSecure(true);
+                cookie.setHttpOnly(true);
+
+                response.addCookie(cookie);
+
+
+                //vložení nějakých dat do databáze, když žádné nejsou
+                //testování cookies
+                try {
+                    System.out.println(cookie.getValue());
+                    System.out.println(cookie.getName());
+                    System.out.println(cookie.getMaxAge());
+
+                } catch (Exception e) {
+                    System.out.println("");
+                }
+
+                //pomocí této boolenovské hodnoty se uživateli bude ověřovat, jestli je přihlášen nebo ne
+                userLoggedIn = true;
+
+                ResponseCookie deleteSpringCookie = ResponseCookie
+                        .from("user-id", null)
+                        .build();
+
+                ResponseEntity
+                        .ok()
+                        .header(HttpHeaders.SET_COOKIE, deleteSpringCookie.toString())
+                        .build();
+
+                return showErrorMessage("Úspěšně jste se přihlásili");
+
+            } else {
+                return showErrorMessage("Špatné heslo");
+            }
+        } else {
+            return showErrorMessage("Tento uživatel neexistuje");
+        }
+    }
+
+    //registrace
+    @RequestMapping("/register")
+    public ModelAndView showRegister() {
+        User u = new User();
+        ModelAndView model = new ModelAndView("register");
+        model.addObject("user", u);
+        return model;
+    }
+
+    ///////////////////// hry ////////////////////////////////
+    @RequestMapping("/formCreateGame")
+    public ModelAndView showCreateGame() {
+        Game mg = new Game();
+        ModelAndView model = new ModelAndView("formCreateGame");
+        model.addObject("game", mg);
+
+        return model;
+    }
+
+    @RequestMapping("/deleteGame")
+    public String deleteGame(@RequestParam("idgame") int idGame) {
+
+        Game game = mgm.getGameById(idGame);
+
+        //ted je potřeba vymazat všechny záznam recenzí a položek k prodeji, které jsou spojeny s hrou přes foreign key
+        List<ItemForSale> itemsToDelete = game.getItemsForSale();
+        List<Review> reviewsToDelete = game.getReviews();
+
+        for (Review r : reviewsToDelete) {
+            rm.delete(r);
+        }
+
+        for (ItemForSale i : itemsToDelete) {
+            im.delete(i);
+        }
+
+        mgm.delete(game);
+
+        return "redirect:/games";
+    }
+
+    @PostMapping("/saveGame")
+    public ModelAndView createGame(@ModelAttribute("game") Game g) {
+        boolean gameValidated;
+
+        //validace hry
+        gameValidated = validateGame(g);
+
+        if (gameValidated) {
+            mgm.save(g);
+            return showGames();
+        } else {
+            return showErrorMessage("Popis a název hry musí být vyplněn");
+        }
+    }
+
+    @RequestMapping(value = "/formChangeGame/{idgame}", method = {RequestMethod.POST, RequestMethod.PUT})
+    public ModelAndView showFormChangeGame(@RequestParam("idgame") int idGame) {
+
+        Game mg = mgm.getGameById(idGame);
+        ModelAndView model = new ModelAndView("formChangeGame");
+        model.addObject("game", mg);
+
+        return model;
+    }
+
+    @RequestMapping(value = "/game/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
+    public ModelAndView showGame(@PathVariable("idgame") int idGame) {
+
+        Game mg = mgm.getGameById(idGame);
+        ModelAndView model = new ModelAndView("game");
+
+        // vypocti celkové hodnocení
+        double score = 0;
+        for (Review r : mg.getReviews()) {
+            score = score + r.getScore();
+        }
+        score = score / mg.getReviews().size();
+
+        mg.setScore((int) score);
+
+        model.addObject("game", mg);
+        model.addObject("reviews", mg.getReviews());
+
+
+        return model;
+    }
+
+    @PostMapping("/editGame")
+    public ModelAndView editGame(@ModelAttribute("game") Game g) {
+        boolean gameValidated;
+
+        gameValidated = validateGame(g);
+
+        if (gameValidated) {
+            mgm.update(g);
+            return showGames();
+        } else {
+            return showErrorMessage("Popis a název hry musí být vyplněn");
+        }
+    }
+
+    ///////////////////// recenze ////////////////////////////////
+    @RequestMapping(value = "/formCreateReview/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
+    public ModelAndView showCreateReview(@PathVariable("idgame") int idGame) {
+        Review r = new Review();
+
+        //poslání této hodnoty do formuláře pro vytvoření nové recenze
+        gameID = idGame;
+
+        ModelAndView model = new ModelAndView("formCreateReview");
+        model.addObject("review", r);
+
+        return model;
+    }
+
+    @PostMapping("/saveReview")
+    public ModelAndView saveReview(@ModelAttribute("review") Review r) {
+
+        boolean reviewValidated;
+
+        //validace recenze
+        reviewValidated = validateReview(r);
+
+        if (reviewValidated) {
+            if (gameID > 0) {
+                r.setGame(mgm.getGameById(gameID));
+                mgm.getGameById(gameID).getReviews().add(r);
+                rm.save(r);
+            }
+            return showGame(gameID);
+        } else {
+            return showErrorMessage("Skóre a datum napsání recenze musí být vyplněno");
+        }
+    }
+
+    @RequestMapping("/formChangeReview")
+    public ModelAndView showFormChangeReview() {
+        ModelAndView model = new ModelAndView("formChangeReview");
+        return model;
+    }
+
+    ///////////////////// uživatel ////////////////////////////////
+    @PostMapping("/saveUser")
+    public ModelAndView saveUser(@ModelAttribute("user") User u) {
+        boolean userValidated;
+
+        //zahashovaní hesla před vložením do databáze
+        String encryptedPassword = bcryptEncoder.encode(u.getPassword());
+
+        System.out.println(encryptedPassword);
+
+        userValidated = validateUser(u);
+
+        if (userValidated) {
+            //validace uživatele
+            u.setPassword(encryptedPassword);
+            um.save(u);
+            return showGames();
+        } else {
+            return showErrorMessage(warningMessageUser);
+        }
+    }
+
+    ///////////////////// položky k prodání ////////////////////////////////
+    @RequestMapping(value = "/items/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
+    public ModelAndView showItemsToSell(@PathVariable("idgame") int idGame) {
+
+        Game mg = mgm.getGameById(idGame);
+        ModelAndView model = new ModelAndView("items");
+        model.addObject("itemsForSale", mg.getItemsForSale());
+        model.addObject("game", mg);
+
+        return model;
+    }
+
+    @RequestMapping(value = "/formCreateItem/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
+    public ModelAndView showCreateItemForm(@PathVariable("idgame") int idGame) {
+        ItemForSale i = new ItemForSale();
+
+        //poslání této hodnoty do formuláře pro vytvoření nové recenze
+        gameID = idGame;
+
+        ModelAndView model = new ModelAndView("formCreateItem");
+        model.addObject("itemForSale", i);
+
+        return model;
+    }
+
+    @PostMapping("/saveItem")
+    public ModelAndView saveReview(@ModelAttribute("itemForSale") ItemForSale i) {
+        boolean itemValidated;
+
+        //validace položky
+        itemValidated = validateItem(i);
+
+        if (itemValidated) {
+            if (gameID > 0) {
+                i.setItemName(mgm.getGameById(gameID).getTitle());
+                //provázání na obou stranách vztahů a uložení do databáze
+                i.setGame(mgm.getGameById(gameID));
+                mgm.getGameById(gameID).getItemsForSale().add(i);
+                im.save(i);
+            }
+            return showGame(gameID);
+        } else {
+            return showErrorMessage("Cena a popis položky k prodání musí být vyplněn");
+        }
+    }
+
+    //////////////// Varovné zprávy se budou zobrazovat přes tuto stránku //////////////////////
+    @RequestMapping("/errorPage")
+    public ModelAndView showErrorMessage(String warningMessage) {
+
+        //poslání této hodnoty do formuláře pro vytvoření nové recenze
+
+        ModelAndView model = new ModelAndView("errorPage");
+        model.addObject("warningMessage", warningMessage);
+
+        return model;
+    }
+
+    //////////////// VALIDACE DAT //////////////////////
+    //validace hry
+    private boolean validateGame(Game g) {
+        //zde si pouze oveřuji, aby něco bylo vyplněno v textu a v titlu
+        if ((g.getTitle() != "") && (g.getText() != "")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //validace recenze
+    private boolean validateReview(Review r) {
+        //zde si pouze oveřuji, aby něco bylo vyplněno v textu a v titlu
+        if ((r.getDate() != "") && (r.getScore() > -1)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //validace položky
+    private boolean validateItem(ItemForSale i) {
+        //zde si pouze oveřuji, aby něco bylo vyplněno v textu a v titlu
+        if ((i.getNote() != "") && (i.getPrice() > 0)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //validace uživatele
+    private boolean validateUser(User u) {
+        boolean check = true;
+
+        //validace délky hesla
+        if (u.getPassword().length() < 8) {
+            warningMessageUser = "Heslo musí mít velikost alespoň 8 znaků";
+            check = false;
+        }
+
+        //validace, aby všechna data byla vyplněna
+        if ((u.getPassword().equals("")) || (u.getUsername().equals("")) || (u.getEmail().equals(""))) {
+            warningMessageUser = "Některé povinné údaje je potřeba doplnit";
+            check = false;
+        }
+
+        //validace hesla
+        if ((u.getPassword().equals("12345678")) || (u.getPassword().equals("heslo"))) {
+            warningMessageUser = "Špatně zabezpečené heslo";
+            check = false;
+        }
+
+        //validace mailu
+        for (User user : um.getUsers()) {
+            //pokud tento mail již v databáze je, tak to vyhodí chybu
+            if (user.getEmail().equals(u.getEmail())) {
+                warningMessageUser = "Tento mail již v databázi existuje";
+                check = false;
+            }
+        }
+
+        //validace jména
+        for (User user : um.getUsers()) {
+            //pokud tento mail již v databáze je, tak to vyhodí chybu
+            if (user.getUsername().equals(u.getUsername())) {
+                warningMessageUser = "Toto uživatelské jméno má už jiný uživatel";
+                check = false;
+            }
+        }
+
+        if (check) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+//    --------------------------------------------------------------------------------------------------------
+//    testování jestli je uživatel přihlášen - pokud má cookies uložené pořád v prohlížeči.
+//    private void userLoggenIn(@CookieValue(name = "userID") String userId, HttpServletRequest request) {
+//
+//
+//        //not used
+//    }
+//
+//    public String readCookie(HttpServletRequest request) {
+//    //    System.out.println("test");
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies != null) {
+//            System.out.println("not null");
+//            return Arrays.stream(cookies)
+//                    .map(c -> c.getName() + "=" + c.getValue())
+//                    .collect(Collectors.joining(", "));
+//        }
+//        System.out.println(Arrays.stream(cookies)
+//                .map(c -> c.getName() + "=" + c.getValue())
+//                .collect(Collectors.joining(", ")));
+//        return "fking bs";
+//    }
+////        System.out.printf(request.getCookies().toString());
+////        return Arrays.stream(request.getCookies())
+////                .filter(c -> key.equals(c.getName()))
+////                .map(Cookie::getValue)
+////                .findAny();
+}

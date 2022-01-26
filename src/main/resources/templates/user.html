@@ -1,87 +1,123 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org" lang="">-->
-<!--<meta charset="UTF-8">-->
-<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-<!--&lt;!&ndash; Styl částečně převzat z w3schools  &ndash;&gt;-->
-<!--<link rel="stylesheet" th:href="@{/main.css}"/>-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Styl částečně převzat z w3schools  -->
+<link rel="stylesheet" th:href="@{/main.css}"/>
 
-<!--<head>-->
-<!--    <title>Česká Herní Databáze</title>-->
-<!--</head>-->
+<head>
+    <title>Česká Herní Databáze</title>
+</head>
 
-<!--<body>-->
-<!--    {{> header userLoggedIn}}-->
+<body>
 
-<!--    <div class="w3-main">-->
-<!--        <div class="w3-row w3-padding-64" style="margin-left:37%">-->
-<!--            <div class="w3-twothird w3-container">-->
-<!--                <h2 style="margin-left:17%" class="w3-text-blue">Vaše údaje </h2>-->
+<!--pouze přihlášený uživatel má povolení tuto stránku vidět-->
+<div th:if="${userLoggedIn == true}">
+    <nav>
+        <!-- hlavička -->
+        <div class="w3-top">
+            <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+                <a href="/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Domů</a>
+                <a href="/games" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Hry</a>
+                <a href="/user" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Vaše údaje</a>
+                <a href="/logout" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Odhlásit se</a>
+            </div>
+        </div>
+    </nav>
 
-<!--                <form method="POST" action="/cgdLists/frontend/usersList/{{user._id}}">-->
+    <div style="margin-top:50px">
+        <div class="w3-row" style="margin-left:50px">
 
-<!--                    &lt;!&ndash; Jsem by se měly zobrazit údaje o uživateli a uživatel by měl mít schopnost je změnit   &ndash;&gt;-->
-<!--                    <label for="user-name">Jméno</label>-->
-<!--                    <input id="user-name" type="text" name="username" class="w3-input" style="margin-bottom:5px"-->
-<!--                        value="{{user.username}}">-->
-<!--                    <label for="user-email">Email</label>-->
-<!--                    <input id="user-email" type="text" name="email" class="w3-input" style="margin-bottom:5px"-->
-<!--                        value="{{user.email}}">-->
-<!--                    <label for="user-password">Heslo (jestli heslo nechcete měnit, nechte pole prázdné)</label>-->
+        </div>
+    </div>
 
-<!--                    <div class="">-->
-<!--                        <input id="user-password" type="password" name="password" class="w3-input"-->
-<!--                            style="margin-bottom:5px" value="">-->
-<!--                        <input id="showPassword" type="checkbox">Ukaž heslo</input>-->
-<!--                    </div>-->
+    <!-- seznam položek k prodeji uživatele -->
+    <div style="margin-top:25px">
+        <div class="w3-row" style="margin-left:50px">
+            <div class="w3-twothird w3-container">
+                <form action="#"
+                      th:action="@{/formChangeUser}"
+                      method="post">
+                    <input type="hidden" th:name="idUser" th:value="${currentUser}"/>
+                    <button style="margin-left:50%" class="w3-button w3-text-blue w3-theme-l3"> Uprav osobní údaje
+                    </button>
+                </form>
+                <h1 class="w3-text-blue" style="margin-left:40%">Vaše položky k prodeji</h1>
+            </div>
+        </div>
 
-<!--                    &lt;!&ndash; Tlačítko pro změnu údajů   &ndash;&gt;-->
-<!--                    <button id="user-button-change" class="w3-button w3-text-blue w3-theme-l3"-->
-<!--                        style="margin-left:19%">Uprav-->
-<!--                        údaje</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        </form>-->
+        <div th:each="item: ${itemsForSale}">
+            <div class="w3-main">
+                <div class="w3-row w3-padding-32" style="margin-left:50px">
+                    <div class="w3-twothird w3-container" style="margin-bottom:-60px">
+                        <h1 class="w3-text-orange" th:text="${item.getItemName()}"></h1>
+                        <h2 class="w3-text-red" th:text="'Cena '+${item.getPrice()}+' €'"></h2>
+                        <p class="w3-text-green" th:text="'Uživatelské jméno: '+${item.getUser().getUsername()}"></p>
+                        <p class="w3-text-blue" th:text="'Kontaktní email: '+${item.getUser().getEmail()}"></p>
+                        <p id="description" th:text="${item.getNote()}"></p>
+                    </div>
 
-<!--        <form method="POST" action="/auth/logout">-->
-<!--            <div style="margin-left:45%">-->
-<!--                <div class="w3-twothird w3-container">-->
-<!--                    &lt;!&ndash; Tlačítko pro odhlášení   &ndash;&gt;-->
-<!--                    <button id="logout-button" class="w3-button w3-text-blue w3-theme-l3"-->
-<!--                        style="margin-top:-100px">Odhlásit se</button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </form>-->
+                    <form action="#" th:action="@{/deleteItemForSale}" method="post">
+                        <input type="hidden" th:name="idItemForSale" th:value="${item.getIdItemForSale()}"/>
+                        <button style="margin-left:-650px" class="w3-button w3-text-blue w3-theme-l3"> Smaž
+                            položku k prodeji
+                        </button>
+                    </form>
 
-<!--        {{#if displayReviewsUser}}-->
-<!--        <div class="w3-row" style="margin-left:50px">-->
-<!--            <div class="w3-twothird w3-container">-->
-<!--                <h1 class="w3-text-blue" style="margin-left:40%">Vaše recenze</h1>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        {{/if}}-->
+                    <form action="#"
+                          th:action="@{/formChangeItem/{idItemForSale}(idItemForSale=${item.getIdItemForSale()})}"
+                          method="post">
+                        <input type="hidden" th:name="idItemForSale" th:value="${item.getIdItemForSale()}"/>
+                        <button style="margin-left:-650px" class="w3-button w3-text-blue w3-theme-l3"> Uprav
+                            položku k prodeji
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-<!--        &lt;!&ndash; seznam recenzí uživatele  &ndash;&gt;-->
-<!--        {{# each userReviews }}-->
-<!--        <div class="w3-row w3-padding-16" style="margin-left:50px">-->
-<!--            <div class="w3-twothird w3-container" style="margin-top:-45px">-->
-<!--                &lt;!&ndash; zbytek se musí propojit z kolekce recenzí podle uživatelského ID  &ndash;&gt;-->
-<!--                <h3 class="w3-text-black" style="margin-top:50px"><a href="game/{{this.gameID}}">{{this.gameTitle}}</a>-->
-<!--                    - vaše skóre: {{this.score}}</h3>-->
-<!--                <h2 class="w3-text-cyan">{{this.title}} </h2>-->
-<!--                <p>{{this.text}}</p>-->
+        <!-- seznam recenzí uživatele  -->
+        <div class="w3-row" style="margin-left:50px">
+            <div class="w3-twothird w3-container">
+                <h1 class="w3-text-blue" style="margin-left:40%">Vaše recenze</h1>
+            </div>
+        </div>
 
-<!--                <div class="">-->
-<!--                    <b class="display-one-line w3-right" style="margin-top:-20px">Datum vytvoření: {{this.date}}</b>-->
-<!--                    <button class="w3-button w3-text-blue w3-theme-l3"><a href="/forms/formChangeReview/{{this._id}}">-->
-<!--                            Uprav recenzi</a></button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        {{/each}}-->
-<!--        {{>footer}}-->
+        <div th:each="review: ${reviews}">
+            <div class="w3-row w3-padding-16" style="margin-left:50px">
+                <div class="w3-twothird w3-container" style="margin-top:-20px">
+                    <!-- zbytek se musí propojit z kolekce recenzí podle uživatelského ID  -->
+                    <h1 class="w3-text-orange" th:text="${review.getGame().getTitle()}"></h1>
+                    <h2 class="w3-text-cyan" th:text="${review.getTitle()}+ ' Skóre: '+${review.getScore()}"></h2>
+                    <p th:text="${review.getText()}"></p>
+                    <b class="display-one-line w3-right" style="margin-top:-17px"
+                       th:text="'Datum vytvoření: '+${review.getDate()}"></b>
+                </div>
 
-<!--        {{!&#45;&#45; v "/js/functions.js je uložena funkce pro schování hesla" &#45;&#45;}}-->
-<!--        <script src="/js/functions.js"></script>-->
-<!--</body>-->
+                <form action="#" th:action="@{/deleteReview}" method="post">
+                    <input type="hidden" th:name="idReview" th:value="${review.getIdReview()}"/>
+                    <button style="margin-left:50px" class="w3-button w3-text-blue w3-theme-l3"> Smaž
+                        recenzi
+                    </button>
+                </form>
 
-<!--</html>-->
+                <form action="#" th:action="@{/formChangeReview/{idReview}(idReview=${review.getIdReview()})}"
+                      method="post">
+                    <input type="hidden" th:name="idReview" th:value="${review.getIdReview()}"/>
+                    <button style="margin-left:50px" class="w3-button w3-text-blue w3-theme-l3"> Uprav
+                        recenzi
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- pata -->
+    <div class="w3-container w3-theme-l2 w3-padding-16" style="margin-top:20px">
+        <h5>Studentský projekt - TNPW2 UHK FIM - Alex El Gharred, David Urban</h5>
+    </div>
+</div>
+</body>
+
+
+</html>

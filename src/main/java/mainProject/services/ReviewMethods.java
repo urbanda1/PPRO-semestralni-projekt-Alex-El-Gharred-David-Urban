@@ -1,5 +1,6 @@
 package mainProject.services;
 
+import mainProject.entities.Game;
 import mainProject.entities.Review;
 import mainProject.repository.ReviewRepository;
 
@@ -34,6 +35,37 @@ public class ReviewMethods extends ServicesMain implements ReviewRepository {
         return Collections.unmodifiableList(reviews);
     }
 
+    private void updateReviewFromDatabase(Review r) {
+        em.getTransaction().begin();
+        //klasický sql skript query
+        Query query = em.createQuery("update Review e set e.title=:title, e.text=:text, e.score=:score, e.date=:date where e.idReview=:idReview");
+        query = query.setParameter("idReview", r.getIdReview());
+        query = query.setParameter("title", r.getTitle());
+        query = query.setParameter("score", r.getScore());
+        query = query.setParameter("date", r.getDate());
+        query = query.setParameter("text", r.getText());
+        query.executeUpdate();
+        em.getTransaction().commit();
+    }
+
+    @Override
+    public void update(Review r) {
+        //sql update skript
+        updateReviewFromDatabase(r);
+
+        //poté změna v seznamu
+        int index = 0;
+        for (Review t : reviews) {
+            if (t.getIdReview() == t.getIdReview()) {
+                reviews.get(index).setDate(r.getDate());
+                reviews.get(index).setText(r.getText());
+                reviews.get(index).setTitle(r.getTitle());
+                reviews.get(index).setScore(r.getScore());
+            }
+            index = index + 1;
+        }
+    }
+
     @Override
     public void delete(Review i) {
         deleteReviewFromDatabase(i.getIdReview());
@@ -47,26 +79,12 @@ public class ReviewMethods extends ServicesMain implements ReviewRepository {
     }
 
     @Override
-    public Review getItemById(int id) {
+    public Review getReviewById(int id) {
         for (Review i : reviews) {
             if (i.getIdReview() == id) {
                 return i;
             }
         }
-        return null;
-    }
-
-    @Override
-    public List<Review> getAllReviewsFromUser(int userId) {
-//        for (ItemForSale i : itemsForSale) {
-//            if (i.getIdItemForSale() == id) {
-//        return null;
-//    }
-        return null;
-    }
-
-    @Override
-    public List<Review> getAllReviewsByMovie(int movieId) {
         return null;
     }
 }

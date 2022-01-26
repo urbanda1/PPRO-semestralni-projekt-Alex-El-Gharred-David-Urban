@@ -10,8 +10,8 @@ public class ServicesMain {
     public static EntityManagerFactory emf = Persistence.createEntityManagerFactory("ppro-aegdu");
     public static EntityManager em = emf.createEntityManager();
 
-    private Game game = new Game(0, "RPG", "PC", "Knights of the Old Republic II", "Obsidian Entertainment", "LucasArts", "Star Wars: Knights of the Old Republic II – The Sith Lords is a role-playing video game developed by Obsidian Entertainment and published by LucasArts.");
-    private Game game2 = new Game(0, "Strategie", "PC", "Caesar 3", "Impressions Games", "Sierra-Online", "Caesar III is a city-building game released on September 30, 1998, for Microsoft Windows and Mac OS, developed by Impressions Games and published by Sierra On-Line");
+    private final Game game = new Game(0, "RPG", "PC", "Knights of the Old Republic II", "Obsidian Entertainment", "LucasArts", "Star Wars: Knights of the Old Republic II – The Sith Lords is a role-playing video game developed by Obsidian Entertainment and published by LucasArts.");
+    private final Game game2 = new Game(0, "Strategie", "PC", "Caesar 3", "Impressions Games", "Sierra-Online", "Caesar III is a city-building game released on September 30, 1998, for Microsoft Windows and Mac OS, developed by Impressions Games and published by Sierra On-Line");
 
 
     public ServicesMain() {

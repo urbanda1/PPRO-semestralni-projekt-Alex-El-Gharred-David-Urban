@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  mysqldb:
+    image:  "mysql:10.7"
+    environment:
+      - MYSQL_DATABASE=ppro-aegdu
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=newPass1234
+    ports:
+      - "6033:3306"
+  api:
+    container_name: PPRO-main-container
+    image: ppro-main-image
+    build:
+    ports:
+      - "8080:8080"
+    environment:
+      - jdbc:mysql://localhost:3306/ppro-aegdu?createDatabaseIfNotExist=true

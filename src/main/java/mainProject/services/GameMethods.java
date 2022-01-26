@@ -45,6 +45,26 @@ public class GameMethods extends ServicesMain implements GameRepository {
         em.getTransaction().commit();
     }
 
+    @Override
+    public void update(Game g) {
+        //sql update skript
+        updateGameFromDatabase(g);
+
+        //poté změna v seznamu
+        int index = 0;
+        for (Game i : games) {
+            if (i.getIdGame() == g.getIdGame()) {
+                games.get(index).setGenre(g.getGenre());
+                games.get(index).setPlatform(g.getPlatform());
+                games.get(index).setDeveloperCompany(g.getDeveloperCompany());
+                games.get(index).setPublisherCompany(g.getPublisherCompany());
+                games.get(index).setTitle(g.getTitle());
+                games.get(index).setText(g.getText());
+            }
+            index = index + 1;
+        }
+    }
+
     public List<Game> getGames() {
         return Collections.unmodifiableList(games);
     }
@@ -65,25 +85,6 @@ public class GameMethods extends ServicesMain implements GameRepository {
         saveEntity(i);
     }
 
-    @Override
-    public void update(Game g) {
-        //sql update skript
-         updateGameFromDatabase(g);
-
-        //poté změna v seznamu
-        int index = 0;
-        for (Game i : games) {
-            if (i.getIdGame() == g.getIdGame()) {
-                games.get(index).setGenre(g.getGenre());
-                games.get(index).setPlatform(g.getPlatform());
-                games.get(index).setDeveloperCompany(g.getDeveloperCompany());
-                games.get(index).setPublisherCompany(g.getPublisherCompany());
-                games.get(index).setTitle(g.getTitle());
-                games.get(index).setText(g.getText());
-            }
-            index = index + 1;
-        }
-    }
 
     @Override
     public Game getGameById(int id) {

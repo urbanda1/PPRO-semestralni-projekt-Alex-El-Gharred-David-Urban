@@ -12,7 +12,19 @@
 
 <body>
 
-<nav>
+<nav th:if="${userLoggedIn == true}">
+    <!-- hlavička -->
+    <div class="w3-top">
+        <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+            <a href="/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Domů</a>
+            <a href="/games" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Hry</a>
+            <a href="/user" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Vaše údaje</a>
+            <a href="/logout" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Odhlásit se</a>
+        </div>
+    </div>
+</nav>
+
+<nav th:if="${userLoggedIn == false}">
     <!-- hlavička -->
     <div class="w3-top">
         <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
@@ -24,16 +36,17 @@
     </div>
 </nav>
 
-<!--    {{!&#45;&#45; formulář pro přihlášení &#45;&#45;}}-->
-<form method="POST" action="/auth/login">
+<!--    formulář pro přihlášení -->
+<form action="#" th:action="@{/loginUser}" th:object="${loginData}"
+      method="post">
     <div class="w3-main">
         <div class="w3-row w3-padding-64" style="margin-left:37%">
             <div class="w3-twothird w3-container">
                 <h2 style="margin-left:16%" class="w3-text-blue">Přihlašte se </h2>
-                <input type="text" name="email" placeholder="Váš email" class="w3-input" style="margin-bottom:5px">
+                <input type="text" name="email" placeholder="Váš email" class="w3-input" style="margin-bottom:5px" th:text="*{email}">
                 <div class="">
                     <input type="password" id="user-password" name="password" placeholder="Heslo" class="w3-input"
-                           style="margin-bottom:5px">
+                           style="margin-bottom:5px" th:text="*{password}">
                 </div>
                 <button id="login-button" class="w3-button w3-text-blue w3-theme-l3" style="margin-left:19%">Přihlaš
                     se

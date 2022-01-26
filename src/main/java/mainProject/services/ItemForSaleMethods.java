@@ -1,11 +1,11 @@
 package mainProject.services;
 
-
 import mainProject.entities.ItemForSale;
 import mainProject.repository.ItemForSaleRepository;
 
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ItemForSaleMethods extends ServicesMain implements ItemForSaleRepository {
@@ -30,12 +30,43 @@ public class ItemForSaleMethods extends ServicesMain implements ItemForSaleRepos
         em.getTransaction().commit();
     }
 
+    private void updateItemFromDatabase(ItemForSale i) {
+        em.getTransaction().begin();
+        //klasický sql skript query
+        Query query = em.createQuery("update ItemForSale e set e.note=:note, e.price=:price where e.idItemForSale=:idItemForSale");
+        query = query.setParameter("idItemForSale", i.getIdItemForSale());
+        query = query.setParameter("note", i.getNote());
+        query = query.setParameter("price", i.getPrice());
+        query.executeUpdate();
+        em.getTransaction().commit();
+    }
+
+    @Override
+    public void update(ItemForSale i) {
+        //sql update skript
+        updateItemFromDatabase(i);
+
+        //poté změna v seznamu
+        int index = 0;
+        for (ItemForSale it : itemsForSale) {
+            if (it.getIdItemForSale() == i.getIdItemForSale()) {
+                itemsForSale.get(index).setNote(i.getNote());
+                itemsForSale.get(index).setPrice(i.getPrice());
+            }
+            index = index + 1;
+        }
+    }
+
     @Override
     public void delete(ItemForSale i) {
         //vymazání z dabáze
         deleteItemFromDatabase(i.getIdItemForSale());
 
         itemsForSale.remove(i);
+    }
+
+    public List<ItemForSale> getItems() {
+        return Collections.unmodifiableList(itemsForSale);
     }
 
     @Override
@@ -54,17 +85,4 @@ public class ItemForSaleMethods extends ServicesMain implements ItemForSaleRepos
         return null;
     }
 
-    @Override
-    public List<ItemForSale> getAllItemsFromUser(int userId) {
-//        for (ItemForSale i : itemsForSale) {
-//            if (i.getIdItemForSale() == id) {
-//        return null;
-//    }
-        return null;
-    }
-
-    @Override
-    public List<ItemForSale> getAllItemsByMovie(int movieId) {
-        return null;
-    }
 }

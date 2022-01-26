@@ -10,7 +10,19 @@
 </head>
 
 <body>
-<nav>
+<nav th:if="${userLoggedIn == true}">
+    <!-- hlavička -->
+    <div class="w3-top">
+        <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+            <a href="/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Domů</a>
+            <a href="/games" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Hry</a>
+            <a href="/user" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Vaše údaje</a>
+            <a href="/logout" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Odhlásit se</a>
+        </div>
+    </div>
+</nav>
+
+<nav th:if="${userLoggedIn == false}">
     <!-- hlavička -->
     <div class="w3-top">
         <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
@@ -22,7 +34,7 @@
     </div>
 </nav>
 
-<!--{{!&#45;&#45; registrační formulář &#45;&#45;}}-->
+<!--registrační formulář-->
 <form action="#" th:action="@{/saveUser}" th:object="${user}"
       method="post">
     <div class="w3-main">

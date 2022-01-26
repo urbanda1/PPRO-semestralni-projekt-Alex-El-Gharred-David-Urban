@@ -14,6 +14,7 @@ import java.util.List;
 public class Application implements WebMvcConfigurer {
 
     public static void main(String[] args) {
+
         //naplnění počátečními daty
         ServicesMain sm = new ServicesMain();
 
@@ -37,5 +38,4 @@ public class Application implements WebMvcConfigurer {
         // namapovat URL / na view jmenem index (tedy pres view-resolver na /WEB-INF/jsp/index.jsp)
         registry.addViewController("/").setViewName("/home.html");
     }
-
 }

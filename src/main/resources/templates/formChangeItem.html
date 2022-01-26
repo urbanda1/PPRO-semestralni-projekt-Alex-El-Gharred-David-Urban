@@ -12,67 +12,58 @@
 
 <body>
 
-<nav>
-    <!-- hlavička -->
-    <div class="w3-top">
-        <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
-            <a href="/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Domů</a>
-            <a href="/games" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Hry</a>
-            <a href="/register" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Registrace</a>
-            <a href="/login" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Přihlaš se</a>
+<!--pouze přihlášený uživatel má povolení tuto stránku vidět-->
+<div th:if="${userLoggedIn == true}">
+    <nav>
+        <!-- hlavička -->
+        <div class="w3-top">
+            <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+                <a href="/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Domů</a>
+                <a href="/games" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Hry</a>
+                <a href="/user" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Vaše údaje</a>
+                <a href="/logout" class="w3-bar-item w3-button w3-hide-small w3-hover-white"> Odhlásit se</a>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
+    <div class="w3-main">
+        <div class="w3-row w3-padding-64" style="margin-left:37%">
+            <div class="w3-twothird w3-container">
 
-<div class="w3-main">
+                <!-- formulář na vytvoření položky k prodeji-->
+                <form action="#" th:action="@{/editItemForSale}" th:object="${itemForSale}"
+                      method="post">
+                    <h2 style="margin-left:10%" class="w3-text-blue"></h2>
 
-    <div class="w3-row w3-padding-64" style="margin-left:37%">
-        <div class="w3-twothird w3-container">
+                    <input type="hidden" th:field="*{idItemForSale}"/>
 
-            {{!-- formulář na úpravu recenze --}}
-            <form method="POST" action="../../cgdLists/frontend/reviewsList/{{review._id}}">
-                <h2 style="margin-left:10%" class="w3-text-blue"></h2>
+                    <label>Zadejte popis.*</label>
+                    <textarea type="text" name="description" placeholder="Zadejte popis"
+                              class="w3-input input-field-extra-width" style="margin-bottom:5px" rows="6"
+                              cols="50" th:field="*{note}"></textarea>
 
-                <label>Zadejte název recenze:</label>
-                <input type="text" name="title" placeholder="Zadejte název" class="w3-input"
-                       style="margin-bottom:5px" value="{{review.title}}">
+                    <label>Zadejte cenu požadovanou cenu.*</label>
+                    <input type="text" name="title" placeholder="Zadejte název" class="w3-input"
+                           style="margin-bottom:5px" th:field="*{price}">
 
-                <label>Zadejte text recenze:</label>
-                <textarea type="text" name="text" placeholder="Zadejte popis recenze"
-                          class="w3-input input-field-extra-width" style="margin-bottom:5px" rows="6"
-                          cols="50">{{review.text}}</textarea>
-
-                <label>Zadejte skóre recenze:*</label>
-                <input type="text" name="score" placeholder="Zadejte skóre" class="w3-input"
-                       style="margin-bottom:5px" value="{{review.score}}">
-
-                <button class="w3-button w3-text-blue w3-theme-l3 " style="margin-left:19%"> Změň
-                    recenzi
-                </button>
-            </form>
-
-            <div style="margin-top:5px">
-                <form method="POST" action="../../cgdLists/frontend/reviewsList/delete/{{review._id}}">
-                    <button class="w3-button w3-text-blue w3-theme-l3 " style="margin-left:19%"> Smaž
-                        recenzi
+                    <button id="create-button" class="w3-button w3-text-blue w3-theme-l3 "
+                            style="margin-left:19%">Uprav
+                        nabídku
                     </button>
-            </div>
-            </form>
+                </form>
 
-            <div style="margin-top:10px">
-                <button id="back-button" class="w3-button w3-text-blue w3-theme-l3" style="margin-left:21%"><a
-                        href="/game/{{review.gameID}}">Zpátky</a></button>
+                <div style="margin-top:10px">
+                    <button id="back-button" class="w3-button w3-text-blue w3-theme-l3" style="margin-left:21%"><a
+                            href="/user">Zpátky</a></button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="w3-container w3-theme-l2 w3-padding-16" style="margin-top:20px">
-    <h5>Studentský projekt - TNPW2 UHK FIM - Alex El Gharred, David Urban</h5>
+    <div class="w3-container w3-theme-l2 w3-padding-16" style="margin-top:20px">
+        <h5>Studentský projekt - TNPW2 UHK FIM - Alex El Gharred, David Urban</h5>
+    </div>
 </div>
-
-<!--        {{>footer}}-->
 
 </body>
 

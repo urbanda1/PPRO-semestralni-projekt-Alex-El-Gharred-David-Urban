@@ -1,5 +1,4 @@
 package mainProject.repository;
-
 import mainProject.entities.Game;
 
 public interface GameRepository {
@@ -11,6 +10,4 @@ public interface GameRepository {
     void update(Game i);
 
     Game getGameById(int id);
-
-
 }
