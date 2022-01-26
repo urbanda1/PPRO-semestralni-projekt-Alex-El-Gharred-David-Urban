@@ -28,9 +28,7 @@ public class ServicesMain {
 
     //metoda pro vložení testovacích dat
     public void createInitialGameData() {
-        em.getTransaction().begin();
-        em.persist(game);
-        em.persist(game2);
-        em.getTransaction().commit();
+        saveEntity(game);
+        saveEntity(game2);
     }
 }

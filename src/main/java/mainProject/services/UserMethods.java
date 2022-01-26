@@ -28,8 +28,8 @@ public class UserMethods extends ServicesMain implements UserRepository {
     private void updateUserFromDatabase(User u) {
         em.getTransaction().begin();
         //klasický sql skript query
-        Query query = em.createQuery("update User e set e.street=:street, e.fullName=:fullname, e.city=:city, e.zipCode=:zipcode, e.password=:password where e.idUser=:idUser");
-        query = query.setParameter("idUser", u.getIdUser())
+        Query query = em.createQuery("update User e set e.street=:street, e.fullName=:fullname, e.city=:city, e.zipCode=:zipcode, e.password=:password where e.idUser=:idUser")
+                .setParameter("idUser", u.getIdUser())
                 .setParameter("street", u.getStreet())
                 .setParameter("fullname", u.getFullName())
                 .setParameter("city", u.getCity())
@@ -45,17 +45,13 @@ public class UserMethods extends ServicesMain implements UserRepository {
         updateUserFromDatabase(u);
 
         //poté změna v seznamu
-        int index = 0;
-        for (User us : users) {
-            if (us.getIdUser() == u.getIdUser()) {
-                users.get(index).setStreet(u.getStreet());
-                users.get(index).setFullName(u.getFullName());
-                users.get(index).setCity(u.getCity());
-                users.get(index).setZipCode(u.getZipCode());
-                users.get(index).setPassword(u.getPassword());
-            }
-            index = index + 1;
-        }
+        int index = users.indexOf(u);
+
+        users.get(index).setStreet(u.getStreet());
+        users.get(index).setFullName(u.getFullName());
+        users.get(index).setCity(u.getCity());
+        users.get(index).setZipCode(u.getZipCode());
+        users.get(index).setPassword(u.getPassword());
     }
 
     @Override

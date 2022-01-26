@@ -24,8 +24,8 @@ public class ItemForSaleMethods extends ServicesMain implements ItemForSaleRepos
     public void deleteItemFromDatabase(int pkItem) {
         em.getTransaction().begin();
         //klasický sql skript query
-        Query query = em.createQuery("delete from ItemForSale e where e.idItemForSale=:iditemforsale");
-        query = query.setParameter("iditemforsale", pkItem);
+        Query query = em.createQuery("delete from ItemForSale e where e.idItemForSale=:iditemforsale")
+                .setParameter("iditemforsale", pkItem);
         query.executeUpdate();
         em.getTransaction().commit();
     }
@@ -33,8 +33,8 @@ public class ItemForSaleMethods extends ServicesMain implements ItemForSaleRepos
     private void updateItemFromDatabase(ItemForSale i) {
         em.getTransaction().begin();
         //klasický sql skript query
-        Query query = em.createQuery("update ItemForSale e set e.note=:note, e.price=:price where e.idItemForSale=:idItemForSale");
-        query = query.setParameter("idItemForSale", i.getIdItemForSale())
+        Query query = em.createQuery("update ItemForSale e set e.note=:note, e.price=:price where e.idItemForSale=:idItemForSale")
+                .setParameter("idItemForSale", i.getIdItemForSale())
                 .setParameter("note", i.getNote())
                 .setParameter("price", i.getPrice());
         query.executeUpdate();
@@ -47,14 +47,10 @@ public class ItemForSaleMethods extends ServicesMain implements ItemForSaleRepos
         updateItemFromDatabase(i);
 
         //poté změna v seznamu
-        int index = 0;
-        for (ItemForSale it : itemsForSale) {
-            if (it.getIdItemForSale() == i.getIdItemForSale()) {
-                itemsForSale.get(index).setNote(i.getNote());
-                itemsForSale.get(index).setPrice(i.getPrice());
-            }
-            index = index + 1;
-        }
+        int index = itemsForSale.indexOf(i);
+
+        itemsForSale.get(index).setNote(i.getNote());
+        itemsForSale.get(index).setPrice(i.getPrice());
     }
 
     @Override

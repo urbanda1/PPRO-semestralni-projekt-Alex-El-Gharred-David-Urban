@@ -24,8 +24,8 @@ public class GameMethods extends ServicesMain implements GameRepository {
     private void deleteGameFromDatabase(int pkGame) {
         em.getTransaction().begin();
         //klasický sql skript query
-        Query query = em.createQuery("delete from Game e where e.idGame=:idgame");
-        query = query.setParameter("idgame", pkGame);
+        Query query = em.createQuery("delete from Game e where e.idGame=:idgame")
+                .setParameter("idgame", pkGame);
         query.executeUpdate();
         em.getTransaction().commit();
     }
@@ -33,9 +33,9 @@ public class GameMethods extends ServicesMain implements GameRepository {
     private void updateGameFromDatabase(Game g) {
         em.getTransaction().begin();
         //klasický sql skript query
-        Query query = em.createQuery("update Game e set e.developerCompany=:developerCompanyNew, e.publisherCompany=:publisherCompanyNew, e.genre=:genreNew, e.platform=:platformNew, e.text=:textNew, e.title=:titleNew where e.idGame=:idgame");
-        query = query.setParameter("idgame", g.getIdGame()).
-                setParameter("developerCompanyNew", g.getDeveloperCompany())
+        Query query = em.createQuery("update Game e set e.developerCompany=:developerCompanyNew, e.publisherCompany=:publisherCompanyNew, e.genre=:genreNew, e.platform=:platformNew, e.text=:textNew, e.title=:titleNew where e.idGame=:idgame")
+                .setParameter("idgame", g.getIdGame())
+                .setParameter("developerCompanyNew", g.getDeveloperCompany())
                 .setParameter("genreNew", g.getGenre())
                 .setParameter("platformNew", g.getPlatform())
                 .setParameter("publisherCompanyNew", g.getPublisherCompany())
@@ -51,18 +51,14 @@ public class GameMethods extends ServicesMain implements GameRepository {
         updateGameFromDatabase(g);
 
         //poté změna v seznamu
-        int index = 0;
-        for (Game i : games) {
-            if (i.getIdGame() == g.getIdGame()) {
-                games.get(index).setGenre(g.getGenre());
-                games.get(index).setPlatform(g.getPlatform());
-                games.get(index).setDeveloperCompany(g.getDeveloperCompany());
-                games.get(index).setPublisherCompany(g.getPublisherCompany());
-                games.get(index).setTitle(g.getTitle());
-                games.get(index).setText(g.getText());
-            }
-            index = index + 1;
-        }
+        int index = games.indexOf(g);
+
+        games.get(index).setGenre(g.getGenre());
+        games.get(index).setPlatform(g.getPlatform());
+        games.get(index).setDeveloperCompany(g.getDeveloperCompany());
+        games.get(index).setPublisherCompany(g.getPublisherCompany());
+        games.get(index).setTitle(g.getTitle());
+        games.get(index).setText(g.getText());
     }
 
     public List<Game> getGames() {

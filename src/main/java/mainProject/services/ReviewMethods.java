@@ -25,8 +25,8 @@ public class ReviewMethods extends ServicesMain implements ReviewRepository {
     private void deleteReviewFromDatabase(int pkReview) {
         em.getTransaction().begin();
         //klasický sql skript query
-        Query query = em.createQuery("delete from Review e where e.idReview=:idreview");
-        query = query.setParameter("idreview", pkReview);
+        Query query = em.createQuery("delete from Review e where e.idReview=:idreview")
+                .setParameter("idreview", pkReview);
         query.executeUpdate();
         em.getTransaction().commit();
     }
@@ -38,8 +38,8 @@ public class ReviewMethods extends ServicesMain implements ReviewRepository {
     private void updateReviewFromDatabase(Review r) {
         em.getTransaction().begin();
         //klasický sql skript query
-        Query query = em.createQuery("update Review e set e.title=:title, e.text=:text, e.score=:score, e.date=:date where e.idReview=:idReview");
-        query = query.setParameter("idReview", r.getIdReview())
+        Query query = em.createQuery("update Review e set e.title=:title, e.text=:text, e.score=:score, e.date=:date where e.idReview=:idReview")
+                .setParameter("idReview", r.getIdReview())
                 .setParameter("title", r.getTitle())
                 .setParameter("score", r.getScore())
                 .setParameter("date", r.getDate())
@@ -54,16 +54,12 @@ public class ReviewMethods extends ServicesMain implements ReviewRepository {
         updateReviewFromDatabase(r);
 
         //poté změna v seznamu
-        int index = 0;
-        for (Review t : reviews) {
-            if (t.getIdReview() == t.getIdReview()) {
-                reviews.get(index).setDate(r.getDate());
-                reviews.get(index).setText(r.getText());
-                reviews.get(index).setTitle(r.getTitle());
-                reviews.get(index).setScore(r.getScore());
-            }
-            index = index + 1;
-        }
+        int index = reviews.indexOf(r);
+
+        reviews.get(index).setDate(r.getDate());
+        reviews.get(index).setText(r.getText());
+        reviews.get(index).setTitle(r.getTitle());
+        reviews.get(index).setScore(r.getScore());
     }
 
     @Override
