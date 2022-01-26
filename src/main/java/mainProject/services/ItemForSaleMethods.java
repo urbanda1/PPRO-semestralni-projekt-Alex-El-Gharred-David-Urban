@@ -34,9 +34,9 @@ public class ItemForSaleMethods extends ServicesMain implements ItemForSaleRepos
         em.getTransaction().begin();
         //klasický sql skript query
         Query query = em.createQuery("update ItemForSale e set e.note=:note, e.price=:price where e.idItemForSale=:idItemForSale");
-        query = query.setParameter("idItemForSale", i.getIdItemForSale());
-        query = query.setParameter("note", i.getNote());
-        query = query.setParameter("price", i.getPrice());
+        query = query.setParameter("idItemForSale", i.getIdItemForSale())
+                .setParameter("note", i.getNote())
+                .setParameter("price", i.getPrice());
         query.executeUpdate();
         em.getTransaction().commit();
     }

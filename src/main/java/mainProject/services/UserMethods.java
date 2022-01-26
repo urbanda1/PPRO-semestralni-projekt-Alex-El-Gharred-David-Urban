@@ -29,12 +29,12 @@ public class UserMethods extends ServicesMain implements UserRepository {
         em.getTransaction().begin();
         //klasický sql skript query
         Query query = em.createQuery("update User e set e.street=:street, e.fullName=:fullname, e.city=:city, e.zipCode=:zipcode, e.password=:password where e.idUser=:idUser");
-        query = query.setParameter("idUser", u.getIdUser());
-        query = query.setParameter("street", u.getStreet());
-        query = query.setParameter("fullname", u.getFullName());
-        query = query.setParameter("city", u.getCity());
-        query = query.setParameter("zipcode", u.getZipCode());
-        query = query.setParameter("password", u.getPassword());
+        query = query.setParameter("idUser", u.getIdUser())
+                .setParameter("street", u.getStreet())
+                .setParameter("fullname", u.getFullName())
+                .setParameter("city", u.getCity())
+                .setParameter("zipcode", u.getZipCode())
+                .setParameter("password", u.getPassword());
         query.executeUpdate();
         em.getTransaction().commit();
     }

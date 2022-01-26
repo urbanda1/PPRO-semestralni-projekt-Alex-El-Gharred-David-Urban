@@ -34,13 +34,13 @@ public class GameMethods extends ServicesMain implements GameRepository {
         em.getTransaction().begin();
         //klasický sql skript query
         Query query = em.createQuery("update Game e set e.developerCompany=:developerCompanyNew, e.publisherCompany=:publisherCompanyNew, e.genre=:genreNew, e.platform=:platformNew, e.text=:textNew, e.title=:titleNew where e.idGame=:idgame");
-        query = query.setParameter("idgame", g.getIdGame());
-        query = query.setParameter("developerCompanyNew", g.getDeveloperCompany());
-        query = query.setParameter("genreNew", g.getGenre());
-        query = query.setParameter("platformNew", g.getPlatform());
-        query = query.setParameter("publisherCompanyNew", g.getPublisherCompany());
-        query = query.setParameter("textNew", g.getText());
-        query = query.setParameter("titleNew", g.getTitle());
+        query = query.setParameter("idgame", g.getIdGame()).
+                setParameter("developerCompanyNew", g.getDeveloperCompany())
+                .setParameter("genreNew", g.getGenre())
+                .setParameter("platformNew", g.getPlatform())
+                .setParameter("publisherCompanyNew", g.getPublisherCompany())
+                .setParameter("textNew", g.getText())
+                .setParameter("titleNew", g.getTitle());
         query.executeUpdate();
         em.getTransaction().commit();
     }

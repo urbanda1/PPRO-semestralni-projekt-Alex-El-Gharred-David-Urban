@@ -39,11 +39,11 @@ public class ReviewMethods extends ServicesMain implements ReviewRepository {
         em.getTransaction().begin();
         //klasický sql skript query
         Query query = em.createQuery("update Review e set e.title=:title, e.text=:text, e.score=:score, e.date=:date where e.idReview=:idReview");
-        query = query.setParameter("idReview", r.getIdReview());
-        query = query.setParameter("title", r.getTitle());
-        query = query.setParameter("score", r.getScore());
-        query = query.setParameter("date", r.getDate());
-        query = query.setParameter("text", r.getText());
+        query = query.setParameter("idReview", r.getIdReview())
+                .setParameter("title", r.getTitle())
+                .setParameter("score", r.getScore())
+                .setParameter("date", r.getDate())
+                .setParameter("text", r.getText());
         query.executeUpdate();
         em.getTransaction().commit();
     }

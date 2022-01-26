@@ -44,16 +44,10 @@ public class MainController {
     ///////////////////// hlavní formuláře ////////////////////////////////
     @RequestMapping("/games")
     public ModelAndView showGames(HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         ModelAndView model = new ModelAndView("games");
         model.addObject("games", mgm.getGames());
@@ -70,14 +64,7 @@ public class MainController {
         if (!loggedIn) {
             //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
             Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                        .map(Cookie::getValue)
-                        .collect(Collectors.joining(", ")));
-                userLoggedIn = true;
-            } else {
-                userLoggedIn = false;
-            }
+            checkIfUserLoggedIn(cookies);
         }
 
         ModelAndView model = new ModelAndView("home");
@@ -90,16 +77,10 @@ public class MainController {
     //přihlášení formulář
     @RequestMapping("/login")
     public ModelAndView showLogin(HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         User u = new User();
         ModelAndView model = new ModelAndView("login");
@@ -113,16 +94,10 @@ public class MainController {
     //přihlášení formulář
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         if (userLoggedIn) {
             cookie = new Cookie("user-id", null);
@@ -184,16 +159,10 @@ public class MainController {
     //registrace
     @RequestMapping("/register")
     public ModelAndView showRegister(HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         User u = new User();
         ModelAndView model = new ModelAndView("register");
@@ -207,16 +176,10 @@ public class MainController {
     ///////////////////// hry ////////////////////////////////
     @RequestMapping("/formCreateGame")
     public ModelAndView showCreateGame(HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         Game mg = new Game();
         ModelAndView model = new ModelAndView("formCreateGame");
@@ -267,16 +230,10 @@ public class MainController {
 
     @RequestMapping(value = "/formChangeGame/{idgame}", method = {RequestMethod.POST, RequestMethod.PUT})
     public ModelAndView showFormChangeGame(@RequestParam("idgame") int idGame, HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         Game mg = mgm.getGameById(idGame);
         ModelAndView model = new ModelAndView("formChangeGame");
@@ -289,16 +246,10 @@ public class MainController {
 
     @RequestMapping(value = "/game/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
     public ModelAndView showGame(@PathVariable("idgame") int idGame, HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         Game mg = mgm.getGameById(idGame);
         ModelAndView model = new ModelAndView("game");
@@ -314,6 +265,15 @@ public class MainController {
 
         model.addObject("game", mg);
         model.addObject("reviews", mg.getReviews());
+
+        if (mg.getReviews().size() ==0) {
+            model.addObject("text", "Zatím žádné recenze");
+
+            model.addObject("noReviews", "Nerecenzováno");
+        } else {
+            model.addObject("text", "");
+            model.addObject("noReviews", "");
+        }
 
         //poslání přihlášení uživatele do frontendu
         model.addObject("userLoggedIn", userLoggedIn);
@@ -337,16 +297,10 @@ public class MainController {
     ///////////////////// recenze ////////////////////////////////
     @RequestMapping(value = "/formCreateReview/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
     public ModelAndView showCreateReview(@PathVariable("idgame") int idGame, HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         Review r = new Review();
 
@@ -363,16 +317,10 @@ public class MainController {
 
     @RequestMapping(value = "/formChangeReview/{idgame}", method = {RequestMethod.POST, RequestMethod.PUT})
     public ModelAndView showFormChangeReview(@RequestParam("idReview") int idReview, HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         Review r = rm.getReviewById(idReview);
         ModelAndView model = new ModelAndView("formChangeReview");
@@ -435,16 +383,10 @@ public class MainController {
 
     @RequestMapping("/formChangeReview")
     public ModelAndView showFormChangeReview(HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         ModelAndView model = new ModelAndView("formChangeReview");
 
@@ -456,16 +398,10 @@ public class MainController {
     ///////////////////// uživatel ////////////////////////////////
     @RequestMapping(value = "/user")
     public ModelAndView showUser(HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         User u = um.getUserById(cookieIdOfLoggedInUser);
 
@@ -477,21 +413,28 @@ public class MainController {
 
         //poslání přihlášení uživatele do frontendu
         model.addObject("userLoggedIn", userLoggedIn);
+
+        //když bude velikost položek 0, zobrazí se text
+        //aby nebyla prázdná stránka
+        if (u.getReviews().size() == 0) {
+            model.addObject("text1", "Zatím žádné recenze");
+        }
+
+        //když bude velikost položek 0, zobrazí se text
+        //aby nebyla prázdná stránka
+        if ( u.getItemsForSale().size() == 0) {
+            model.addObject("text2", "Zatím žádné nabídky");
+        }
+
         return model;
     }
 
     @RequestMapping(value = "/formChangeUser")
     public ModelAndView showFormChangeUser(HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         User u = um.getUserById(cookieIdOfLoggedInUser);
         ModelAndView model = new ModelAndView("formChangeUser");
@@ -544,21 +487,21 @@ public class MainController {
     ///////////////////// položky k prodání ////////////////////////////////
     @RequestMapping(value = "/items/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
     public ModelAndView showItemsToSell(@PathVariable("idgame") int idGame, HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         Game mg = mgm.getGameById(idGame);
         ModelAndView model = new ModelAndView("items");
         model.addObject("itemsForSale", mg.getItemsForSale());
         model.addObject("game", mg);
+
+        //když bude velikost položek 0, zobrazí se text
+        //aby nebyla prázdná stránka
+        if (mg.getItemsForSale().size() == 0) {
+            model.addObject("text", "Zatím žádné nabídky");
+        }
 
         //poslání přihlášení uživatele do frontendu
         model.addObject("userLoggedIn", userLoggedIn);
@@ -568,16 +511,10 @@ public class MainController {
 
     @RequestMapping(value = "/formChangeItem/{idItemForSale}", method = {RequestMethod.POST, RequestMethod.PUT})
     public ModelAndView showFormChangeItem(@RequestParam("idItemForSale") int idItemForSale, HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         ItemForSale i = im.getItemById(idItemForSale);
         ModelAndView model = new ModelAndView("formChangeItem");
@@ -604,16 +541,10 @@ public class MainController {
 
     @RequestMapping(value = "/formCreateItem/{idgame}", method = {RequestMethod.GET, RequestMethod.PUT})
     public ModelAndView showCreateItemForm(@PathVariable("idgame") int idGame, HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         ItemForSale i = new ItemForSale();
 
@@ -668,16 +599,10 @@ public class MainController {
     //////////////// Varovné zprávy se budou zobrazovat přes tuto stránku //////////////////////
     @RequestMapping("/errorPage")
     public ModelAndView showErrorMessage(String warningMessage, HttpServletRequest request) {
+
         //ověření jestli je uživatel přihlášen - jestli má cookies pořád v prohlížeči
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
-                    .map(Cookie::getValue)
-                    .collect(Collectors.joining(", ")));
-            userLoggedIn = true;
-        } else {
-            userLoggedIn = false;
-        }
+        checkIfUserLoggedIn(cookies);
 
         //poslání této hodnoty do formuláře pro vytvoření nové recenze
 
@@ -729,21 +654,18 @@ public class MainController {
         if (u.getPassword().length() < 8) {
             warningMessageUser = "Heslo musí mít velikost alespoň 8 znaků";
             check = false;
-            System.out.println("1");
         }
 
         //validace, aby všechna data byla vyplněna
         if ((u.getPassword().equals("")) || (u.getUsername().equals("")) || (u.getEmail().equals(""))) {
             warningMessageUser = "Některé povinné údaje je potřeba doplnit";
             check = false;
-            System.out.println("2");
         }
 
         //validace hesla
         if ((u.getPassword().equals("12345678")) || (u.getPassword().equals("heslo"))) {
             warningMessageUser = "Špatně zabezpečené heslo";
             check = false;
-            System.out.println("3");
         }
 
         //validace mailu
@@ -779,27 +701,36 @@ public class MainController {
         if (u.getPassword().length() < 8) {
             warningMessageUser = "Heslo musí mít velikost alespoň 8 znaků";
             check = false;
-            System.out.println("1");
         }
 
         //validace, aby všechna data byla vyplněna
         if ((u.getPassword().equals("")) || (u.getUsername().equals("")) || (u.getEmail().equals(""))) {
             warningMessageUser = "Některé povinné údaje je potřeba doplnit";
             check = false;
-            System.out.println("2");
         }
 
         //validace hesla
         if ((u.getPassword().equals("12345678")) || (u.getPassword().equals("heslo"))) {
             warningMessageUser = "Špatně zabezpečené heslo";
             check = false;
-            System.out.println("3");
         }
 
         if (check) {
             return true;
         } else {
             return false;
+        }
+    }
+
+    //utility methods
+    private void checkIfUserLoggedIn(Cookie[] cookies) {
+        if (cookies != null) {
+            cookieIdOfLoggedInUser = parseInt(Arrays.stream(cookies)
+                    .map(Cookie::getValue)
+                    .collect(Collectors.joining(", ")));
+            userLoggedIn = true;
+        } else {
+            userLoggedIn = false;
         }
     }
 }

@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <!-- seznam položek k prodeji uživatele -->
+
     <div style="margin-top:25px">
         <div class="w3-row" style="margin-left:50px">
             <div class="w3-twothird w3-container">
@@ -43,9 +43,11 @@
                     </button>
                 </form>
                 <h1 class="w3-text-blue" style="margin-left:40%">Vaše položky k prodeji</h1>
+                <h1 th:text="${text2}"></h1>
             </div>
         </div>
 
+        <!-- seznam položek k prodeji uživatele -->
         <div th:each="item: ${itemsForSale}">
             <div class="w3-main">
                 <div class="w3-row w3-padding-32" style="margin-left:50px">
@@ -80,6 +82,7 @@
         <div class="w3-row" style="margin-left:50px">
             <div class="w3-twothird w3-container">
                 <h1 class="w3-text-blue" style="margin-left:40%">Vaše recenze</h1>
+                <h2 th:text="${text1}"></h2>
             </div>
         </div>
 
